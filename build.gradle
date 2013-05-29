@@ -1,0 +1,15 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+// instruct Gradle to look in mavenCentral repository first, then the /lib directory 
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile "log4j:log4j:1.2.17"
+	
+	testCompile "org.hamcrest:hamcrest-library:1.3"
+	testCompile "junit:junit-dep:4.11"
+
+}
