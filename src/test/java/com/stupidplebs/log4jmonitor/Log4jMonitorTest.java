@@ -43,12 +43,12 @@ public class Log4jMonitorTest {
         assertThat(log4jMonitor.getStatementCount(), is(5));
 
         // And the statements should be as logged in order
-        List<String> statements = log4jMonitor.getStatements();
-        assertThat(statements.get(0), is("DEBUG - debug statement"));
-        assertThat(statements.get(1), is("INFO - info statement"));
-        assertThat(statements.get(2), is("WARN - warn statement"));
-        assertThat(statements.get(3), is("ERROR - error statement"));
-        assertThat(statements.get(4), is("FATAL - fatal statement"));
+        List<Log4jStatement> statements = log4jMonitor.getStatements();
+        assertThat(statements.get(0), is(Log4jStatement.getInstance(Level.DEBUG, "debug statement")));
+        assertThat(statements.get(1), is(Log4jStatement.getInstance(Level.INFO, "info statement")));
+        assertThat(statements.get(2), is(Log4jStatement.getInstance(Level.WARN, "warn statement")));
+        assertThat(statements.get(3), is(Log4jStatement.getInstance(Level.ERROR, "error statement")));
+        assertThat(statements.get(4), is(Log4jStatement.getInstance(Level.FATAL, "fatal statement")));
 
     }
 
@@ -72,12 +72,12 @@ public class Log4jMonitorTest {
 
         // And the only the DEBUG, INFO, WARN, ERROR, and FATAL statements
         // should be as logged in order
-        List<String> statements = log4jMonitor.getStatements();
-        assertThat(statements.get(0), is("DEBUG - debug statement"));
-        assertThat(statements.get(1), is("INFO - info statement"));
-        assertThat(statements.get(2), is("WARN - warn statement"));
-        assertThat(statements.get(3), is("ERROR - error statement"));
-        assertThat(statements.get(4), is("FATAL - fatal statement"));
+        List<Log4jStatement> statements = log4jMonitor.getStatements();
+        assertThat(statements.get(0), is(Log4jStatement.getInstance(Level.DEBUG, "debug statement")));
+        assertThat(statements.get(1), is(Log4jStatement.getInstance(Level.INFO, "info statement")));
+        assertThat(statements.get(2), is(Log4jStatement.getInstance(Level.WARN, "warn statement")));
+        assertThat(statements.get(3), is(Log4jStatement.getInstance(Level.ERROR, "error statement")));
+        assertThat(statements.get(4), is(Log4jStatement.getInstance(Level.FATAL, "fatal statement")));
 
     }
 
@@ -101,11 +101,11 @@ public class Log4jMonitorTest {
 
         // And the only the INFO, WARN, ERROR, and FATAL statements should be as
         // logged in order
-        List<String> statements = log4jMonitor.getStatements();
-        assertThat(statements.get(0), is("INFO - info statement"));
-        assertThat(statements.get(1), is("WARN - warn statement"));
-        assertThat(statements.get(2), is("ERROR - error statement"));
-        assertThat(statements.get(3), is("FATAL - fatal statement"));
+        List<Log4jStatement> statements = log4jMonitor.getStatements();
+        assertThat(statements.get(0), is(Log4jStatement.getInstance(Level.INFO, "info statement")));
+        assertThat(statements.get(1), is(Log4jStatement.getInstance(Level.WARN, "warn statement")));
+        assertThat(statements.get(2), is(Log4jStatement.getInstance(Level.ERROR, "error statement")));
+        assertThat(statements.get(3), is(Log4jStatement.getInstance(Level.FATAL, "fatal statement")));
 
     }
 
@@ -129,10 +129,10 @@ public class Log4jMonitorTest {
 
         // And the only the WARN, ERROR, and FATAL statements should be as
         // logged in order
-        List<String> statements = log4jMonitor.getStatements();
-        assertThat(statements.get(0), is("WARN - warn statement"));
-        assertThat(statements.get(1), is("ERROR - error statement"));
-        assertThat(statements.get(2), is("FATAL - fatal statement"));
+        List<Log4jStatement> statements = log4jMonitor.getStatements();
+        assertThat(statements.get(0), is(Log4jStatement.getInstance(Level.WARN, "warn statement")));
+        assertThat(statements.get(1), is(Log4jStatement.getInstance(Level.ERROR, "error statement")));
+        assertThat(statements.get(2), is(Log4jStatement.getInstance(Level.FATAL, "fatal statement")));
 
     }
 
@@ -156,9 +156,9 @@ public class Log4jMonitorTest {
 
         // And the only the ERROR and FATAL statements should be as logged in
         // order
-        List<String> statements = log4jMonitor.getStatements();
-        assertThat(statements.get(0), is("ERROR - error statement"));
-        assertThat(statements.get(1), is("FATAL - fatal statement"));
+        List<Log4jStatement> statements = log4jMonitor.getStatements();
+        assertThat(statements.get(0), is(Log4jStatement.getInstance(Level.ERROR, "error statement")));
+        assertThat(statements.get(1), is(Log4jStatement.getInstance(Level.FATAL, "fatal statement")));
 
     }
 
@@ -181,8 +181,8 @@ public class Log4jMonitorTest {
         assertThat(log4jMonitor.getStatementCount(), is(1));
 
         // And the logged statement should be the FATAL statement
-        List<String> statements = log4jMonitor.getStatements();
-        assertThat(statements.get(0), is("FATAL - fatal statement"));
+        List<Log4jStatement> statements = log4jMonitor.getStatements();
+        assertThat(statements.get(0), is(Log4jStatement.getInstance(Level.FATAL, "fatal statement")));
 
     }
 
@@ -216,11 +216,16 @@ public class Log4jMonitorTest {
         String[] statements = new String(byteArrayOutputStream.toByteArray())
                 .split(LINE_SEPARATOR);
         assertThat(statements.length, is(5));
-        assertThat(statements[0], is("DEBUG - debug statement"));
-        assertThat(statements[1], is("INFO - info statement"));
-        assertThat(statements[2], is("WARN - warn statement"));
-        assertThat(statements[3], is("ERROR - error statement"));
-        assertThat(statements[4], is("FATAL - fatal statement"));
+        assertThat(statements[0], is("com.stupidplebs.log4jmonitor.Log4jStatement" +
+        		"[level=DEBUG,statement=debug statement]"));
+        assertThat(statements[1], is("com.stupidplebs.log4jmonitor.Log4jStatement" +
+        		"[level=INFO,statement=info statement]"));
+        assertThat(statements[2], is("com.stupidplebs.log4jmonitor.Log4jStatement" +
+        		"[level=WARN,statement=warn statement]"));
+        assertThat(statements[3], is("com.stupidplebs.log4jmonitor.Log4jStatement" +
+        		"[level=ERROR,statement=error statement]"));
+        assertThat(statements[4], is("com.stupidplebs.log4jmonitor.Log4jStatement" +
+        		"[level=FATAL,statement=fatal statement]"));
 
     }
 

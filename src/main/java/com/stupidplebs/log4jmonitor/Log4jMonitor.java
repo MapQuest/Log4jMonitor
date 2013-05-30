@@ -2,7 +2,6 @@ package com.stupidplebs.log4jmonitor;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -117,12 +116,25 @@ public class Log4jMonitor {
      * 
      * @return a List of all logged statements
      */
-    public List<String> getStatements() {
+    public List<Log4jStatement> getStatements() {
         // convert the outputstream to a string and split on newline
         final String[] statements = new String(outputStream.toByteArray())
                 .split(LINE_SEPARATOR);
 
-        return Arrays.asList(statements);
+        final List<Log4jStatement> log4jStatements = new ArrayList<Log4jStatement>();
+        
+        for (final String statement : statements) {
+        	final String[] parts = statement.split(" - ", 2);
+        	
+        	final Level level = Level.toLevel(parts[0]);
+        	
+        	final Log4jStatement log4jStatement = new Log4jStatement(level, parts[1]);
+        	
+        	log4jStatements.add(log4jStatement);
+        	
+        }
+        
+        return log4jStatements;
 
     }
 
@@ -138,9 +150,9 @@ public class Log4jMonitor {
         final List<String> levelSpecificStatements = new ArrayList<String>();
 
         // loop over all statements, adding if logged at the specified level
-        for (final String statement : getStatements()) {
-            if (statement.startsWith(level.toString() + " - ")) {
-                levelSpecificStatements.add(statement);
+        for (final Log4jStatement statement : getStatements()) {
+            if (statement.getLevel() == level) {
+                levelSpecificStatements.add(statement.getStatement());
             }
         }
 
@@ -185,7 +197,7 @@ public class Log4jMonitor {
      * 
      */
     public void dumpToStdError() {
-        for (final String statement : getStatements()) {
+        for (final Log4jStatement statement : getStatements()) {
             System.err.println(statement);
         }
 
@@ -200,9 +212,10 @@ public class Log4jMonitor {
      */
     public Boolean isStatement(final Level level, final String statement) {
         for (final String loggedStatement : getStatements(level)) {
-            if (loggedStatement.equals(level.toString() + " - " + statement)) {
-                return true;
-            }
+        	if (loggedStatement.equals(statement)) {
+        		return true;
+        	}
+        	
         }
 
         return false;
