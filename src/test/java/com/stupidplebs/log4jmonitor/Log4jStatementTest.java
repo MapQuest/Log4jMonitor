@@ -40,7 +40,7 @@ public class Log4jStatementTest {
 
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void nullLevelParameterToGetInstanceShouldThrowIllegalArgumentException() {
         // Given a null Level
         Level level = null;
@@ -50,12 +50,12 @@ public class Log4jStatementTest {
 
         // When getInstance is called
         Log4jStatement.getInstance(level, statement);
-        
+
         // Then an IllegalArgumentException should be thrown
-        
+
     }
-    
-    @Test(expected=IllegalArgumentException.class)
+
+    @Test(expected = IllegalArgumentException.class)
     public void nullStatementParameterToGetInstanceShouldThrowIllegalArgumentException() {
         // Given a Level
         Level level = Level.ERROR;
@@ -65,11 +65,11 @@ public class Log4jStatementTest {
 
         // When getInstance is called
         Log4jStatement.getInstance(level, statement);
-        
+
         // Then an IllegalArgumentException should be thrown
-        
+
     }
-    
+
     @Test
     public void toStringShouldOutputFullClassNameAndLevelAndStatement() {
         // Given a Level
@@ -82,13 +82,12 @@ public class Log4jStatementTest {
         Log4jStatement log4jStatement = new Log4jStatement(level, statement);
 
         // Expect toString to output full class name and level and statement
-        assertThat(log4jStatement.toString(), is("com.stupidplebs.log4jmonitor.Log4jStatement[" +
-        		"level=ERROR," +
-        		"statement=log statement" +
-        		"]"));
-        
+        assertThat(log4jStatement.toString(),
+                is("com.stupidplebs.log4jmonitor.Log4jStatement["
+                        + "level=ERROR," + "statement=log statement" + "]"));
+
     }
-    
+
     @Test
     public void comparisonToNullShouldReturnFalse() {
         // Given a Level
@@ -102,12 +101,12 @@ public class Log4jStatementTest {
 
         // And a null Log4jStatement
         Log4jStatement other = null;
-        
+
         // Expect equals to return false
         assertThat(log4jStatement.equals(other), is(false));
-        
+
     }
-    
+
     @Test
     public void comparisonToSameObjectShouldReturnTrue() {
         // Given a Level
@@ -121,12 +120,12 @@ public class Log4jStatementTest {
 
         // And a pointer to the same Log4jStatement
         Log4jStatement other = log4jStatement;
-        
+
         // Expect equals to return true
         assertThat(log4jStatement.equals(other), is(true));
-        
+
     }
-    
+
     @Test
     public void comparisonToNonLog4jStatementShouldReturnTrue() {
         // Given a Level
@@ -140,58 +139,62 @@ public class Log4jStatementTest {
 
         // And a non-Log4jStatement object
         String other = "this isn't a Log4jStatement instance";
-        
+
         // Expect equals to return false
         assertThat(log4jStatement.equals(other), is(false));
-        
+
     }
-    
+
     @Test
     public void comparisonToLog4jStatementWithDifferentLevelShouldReturnFalseAndHaveDifferentHashCodes() {
         // Given a Log4jStatement instance
-        Log4jStatement log4jStatement = new Log4jStatement(Level.ERROR, "log statement");
+        Log4jStatement log4jStatement = new Log4jStatement(Level.ERROR,
+                "log statement");
 
         // And a Log4jStatement instance differing on level
         Log4jStatement other = new Log4jStatement(Level.INFO, "log statement");
-        
+
         // Expect equals to return false
         assertThat(log4jStatement.equals(other), is(false));
-        
+
         // And the hashCodes should be different
         assertThat(log4jStatement.hashCode(), is(not(other.hashCode())));
-        
+
     }
-    
+
     @Test
     public void comparisonToLog4jStatementWithDifferentStatementShouldReturnFalseAndHaveDifferentHashCodes() {
         // Given a Log4jStatement instance
-        Log4jStatement log4jStatement = new Log4jStatement(Level.ERROR, "log statement");
+        Log4jStatement log4jStatement = new Log4jStatement(Level.ERROR,
+                "log statement");
 
         // And a Log4jStatement instance differing on statement
-        Log4jStatement other = new Log4jStatement(Level.ERROR, "different log statement");
-        
+        Log4jStatement other = new Log4jStatement(Level.ERROR,
+                "different log statement");
+
         // Expect equals to return false
         assertThat(log4jStatement.equals(other), is(false));
-        
+
         // And the hashCodes should be different
         assertThat(log4jStatement.hashCode(), is(not(other.hashCode())));
-        
+
     }
-    
+
     @Test
     public void comparisonToLog4jStatementWithIdenticalLevelAndStatementShouldReturnTrueAndHaveIdenticalHashCodes() {
         // Given a Log4jStatement instance
-        Log4jStatement log4jStatement = new Log4jStatement(Level.ERROR, "log statement");
+        Log4jStatement log4jStatement = new Log4jStatement(Level.ERROR,
+                "log statement");
 
         // And a Log4jStatement instance with same level and statement
         Log4jStatement other = new Log4jStatement(Level.ERROR, "log statement");
-        
+
         // Expect equals to return false
         assertThat(log4jStatement.equals(other), is(true));
-        
+
         // And the hashCodes should be identical
         assertThat(log4jStatement.hashCode(), is(other.hashCode()));
-        
+
     }
-    
+
 }

@@ -11,17 +11,19 @@ public class Log4jStatement {
         this.statement = statement;
     }
 
-    public static Log4jStatement getInstance(final Level level, final String statement) {
+    public static Log4jStatement getInstance(final Level level,
+            final String statement) {
         if (null == level) {
             throw new IllegalArgumentException("level parameter cannot be null");
         }
         if (null == statement) {
-            throw new IllegalArgumentException("statement parameter cannot be null");
+            throw new IllegalArgumentException(
+                    "statement parameter cannot be null");
         }
-        
+
         return new Log4jStatement(level, statement);
     }
-    
+
     public Level getLevel() {
         return level;
     }
@@ -36,11 +38,11 @@ public class Log4jStatement {
         sb.append(this.getClass().getName());
         sb.append('[').append("level").append('=').append(level).append(',');
         sb.append("statement").append('=').append(statement).append(']');
-        
+
         return sb.toString();
-        
+
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -56,27 +58,27 @@ public class Log4jStatement {
         if (this == o) {
             return true;
         }
-        
+
         if (o == null) {
             return false;
         }
-        
+
         if (getClass() != o.getClass()) {
             return false;
         }
-        
-        final Log4jStatement other = (Log4jStatement)o;
+
+        final Log4jStatement other = (Log4jStatement) o;
 
         if (!level.equals(other.level)) {
             return false;
         }
-        
+
         if (!statement.equals(other.statement)) {
             return false;
         }
-        
+
         return true;
-        
+
     }
-    
+
 }

@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -122,18 +124,19 @@ public class Log4jMonitor {
                 .split(LINE_SEPARATOR);
 
         final List<Log4jStatement> log4jStatements = new ArrayList<Log4jStatement>();
-        
+
         for (final String statement : statements) {
-        	final String[] parts = statement.split(" - ", 2);
-        	
-        	final Level level = Level.toLevel(parts[0]);
-        	
-        	final Log4jStatement log4jStatement = new Log4jStatement(level, parts[1]);
-        	
-        	log4jStatements.add(log4jStatement);
-        	
+            final String[] parts = statement.split(" - ", 2);
+
+            final Level level = Level.toLevel(parts[0]);
+
+            final Log4jStatement log4jStatement = new Log4jStatement(level,
+                    parts[1]);
+
+            log4jStatements.add(log4jStatement);
+
         }
-        
+
         return log4jStatements;
 
     }
@@ -157,6 +160,26 @@ public class Log4jMonitor {
         }
 
         return Collections.unmodifiableList(levelSpecificStatements);
+
+    }
+
+    public List<String> getStatements(final Level level, final Pattern pattern) {
+        if (null == level || null == pattern) {
+            return Collections.unmodifiableList(new ArrayList<String>());
+        }
+
+        final List<String> statementsMatchingPattern = new ArrayList<String>();
+
+        for (final String levelSpecificStatement : getStatements(level)) {
+            final Matcher matcher = pattern.matcher(levelSpecificStatement);
+
+            if (matcher.matches()) {
+                statementsMatchingPattern.add(levelSpecificStatement);
+            }
+
+        }
+
+        return Collections.unmodifiableList(statementsMatchingPattern);
 
     }
 
@@ -212,10 +235,10 @@ public class Log4jMonitor {
      */
     public Boolean isStatement(final Level level, final String statement) {
         for (final String loggedStatement : getStatements(level)) {
-        	if (loggedStatement.equals(statement)) {
-        		return true;
-        	}
-        	
+            if (loggedStatement.equals(statement)) {
+                return true;
+            }
+
         }
 
         return false;
