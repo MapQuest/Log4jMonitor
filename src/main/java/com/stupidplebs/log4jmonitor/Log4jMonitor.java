@@ -29,6 +29,20 @@ public class Log4jMonitor {
     public final static String LINE_SEPARATOR = System
             .getProperty("line.separator");
 
+    // this matches:
+    // - any of the log4j levels
+    // - a space-dash-space
+    // - reluctant anything 
+    // - newline
+    // - positive-lookahead for any of:
+    // - the log4j levels with space-dash-space
+    // - end-of-string
+    public final Pattern concatenatedStatementsPattern = Pattern.compile(
+            "(DEBUG|INFO|WARN|ERROR|FATAL) - "
+            + "(.*?)" + LINE_SEPARATOR
+            + "(?=DEBUG - |INFO - |WARN - |ERROR - |FATAL - |$)",
+            Pattern.DOTALL);
+    
     /**
      * Constructor that sets up log4j to log all statements matching the
      * supplied level or higher in importance
@@ -124,19 +138,10 @@ public class Log4jMonitor {
         final String concatenatedStatements = new String(
                 outputStream.toByteArray());
 
-        // this matches:
-        // - any of the log4j levels
-        // - a space-dash-space
-        // - reluctant anything
-        // - positive-lookahead for any of:
-        // - the log4j levels with space-dash-space
-        // - end-of-string
-        final Pattern p = Pattern.compile("(DEBUG|INFO|WARN|ERROR|FATAL) - "
-                + "(.*?)" + LINE_SEPARATOR
-                + "(?=DEBUG - |INFO - |WARN - |ERROR - |FATAL - |$)",
-                Pattern.DOTALL);
-
-        final Matcher matcher = p.matcher(concatenatedStatements);
+        // wire up a matcher that can be iterated over to extract the 
+        //  individual statements
+        final Matcher matcher = concatenatedStatementsPattern.matcher(
+                concatenatedStatements);
 
         // allow the java regex library to iterate until all statements are
         // consumed
