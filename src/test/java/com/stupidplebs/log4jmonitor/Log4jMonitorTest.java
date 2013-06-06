@@ -279,7 +279,7 @@ public class Log4jMonitorTest {
         // When dumpToStdError is called
         log4jMonitor.dumpToStdError();
 
-        // Then
+        // Then all statements should have been dumped to STDERR
         String[] statements = new String(byteArrayOutputStream.toByteArray())
                 .split(LINE_SEPARATOR);
         assertThat(statements.length, is(5));

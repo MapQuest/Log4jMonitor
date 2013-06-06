@@ -113,8 +113,7 @@ public class Log4jMonitor {
     }
 
     /**
-     * Get all logged statements of severity level equal to or higher than the
-     * constructed severity level
+     * Get all statements written to the logger
      * 
      * @return a List of all logged statements
      */
