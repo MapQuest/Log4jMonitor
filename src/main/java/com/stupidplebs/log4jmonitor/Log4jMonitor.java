@@ -118,37 +118,41 @@ public class Log4jMonitor {
      * @return a List of all logged statements
      */
     public List<Log4jStatement> getStatements() {
-    	final List<Log4jStatement> log4jStatements = new ArrayList<Log4jStatement>();
+        final List<Log4jStatement> log4jStatements = new ArrayList<Log4jStatement>();
 
-    	// convert the outputstream to a string and split on newline
-    	final String concatenatedStatements = new String(outputStream.toByteArray());
+        // convert the outputstream to a string and split on newline
+        final String concatenatedStatements = new String(
+                outputStream.toByteArray());
 
-    	// this matches:
-    	// - any of the log4j levels
-    	// - a space-dash-space
-    	// - reluctant anything
-    	// - positive-lookahead for any of:
-    	//   - the log4j levels with space-dash-space
-    	//   - end-of-string
-    	final Pattern p = Pattern.compile("(DEBUG|INFO|WARN|ERROR|FATAL) - " +
-    			"(.*?)"+LINE_SEPARATOR+"(?=DEBUG - |INFO - |WARN - |ERROR - |FATAL - |$)", 
-    			Pattern.DOTALL);
+        // this matches:
+        // - any of the log4j levels
+        // - a space-dash-space
+        // - reluctant anything
+        // - positive-lookahead for any of:
+        // - the log4j levels with space-dash-space
+        // - end-of-string
+        final Pattern p = Pattern.compile("(DEBUG|INFO|WARN|ERROR|FATAL) - "
+                + "(.*?)" + LINE_SEPARATOR
+                + "(?=DEBUG - |INFO - |WARN - |ERROR - |FATAL - |$)",
+                Pattern.DOTALL);
 
         final Matcher matcher = p.matcher(concatenatedStatements);
 
-        // allow the java regex library to iterate until all statements are consumed
+        // allow the java regex library to iterate until all statements are
+        // consumed
         while (matcher.find()) {
-        	final Level level = Level.toLevel(matcher.group(1));
-        	final String statement = matcher.group(2);
-        	
-        	final Log4jStatement log4jStatement = new Log4jStatement(level, statement);
-        	
-        	log4jStatements.add(log4jStatement);
-        	
+            final Level level = Level.toLevel(matcher.group(1));
+            final String statement = matcher.group(2);
+
+            final Log4jStatement log4jStatement = new Log4jStatement(level,
+                    statement);
+
+            log4jStatements.add(log4jStatement);
+
         }
 
         return log4jStatements;
-    	
+
     }
 
     /**
@@ -177,7 +181,7 @@ public class Log4jMonitor {
      * Get all logged statements of a specific severity level matching a pattern
      * 
      * @param level
-     * @param pattern 
+     * @param pattern
      * @return a List of all logged statements of a specific severity level
      */
     public List<String> getStatements(final Level level, final Pattern pattern) {
@@ -204,16 +208,16 @@ public class Log4jMonitor {
      * Get all logged statements of a specific severity level matching a pattern
      * 
      * @param level
-     * @param pattern 
+     * @param pattern
      * @return a List of all logged statements of a specific severity level
      */
     public List<String> getStatements(final Level level, final String rawPattern) {
-    	if (null == rawPattern) {
+        if (null == rawPattern) {
             return Collections.unmodifiableList(new ArrayList<String>());
         }
 
-    	final Pattern pattern = Pattern.compile(rawPattern);
-    	
+        final Pattern pattern = Pattern.compile(rawPattern);
+
         return getStatements(level, pattern);
 
     }

@@ -217,17 +217,22 @@ public class Log4jMonitorTest {
         Logger logger = Logger.getLogger(Log4jMonitorTest.class);
 
         // When DEBUG, INFO, WARN, ERROR, and FATAL statements are logged
-        String debugStatement = String.format("debug statement%swith embedded%snewlines", 
-        		Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
-        String infoStatement = String.format("info statement%swith embedded%snewlines", 
-        		Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
-        String warnStatement = String.format("warn statement%swith embedded%snewlines", 
-        		Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
-        String errorStatement = String.format("error statement%swith embedded%snewlines", 
-        		Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
-        String fatalStatement = String.format("fatal statement%swith embedded%snewlines", 
-        		Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
-        
+        String debugStatement = String.format(
+                "debug statement%swith embedded%snewlines",
+                Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
+        String infoStatement = String.format(
+                "info statement%swith embedded%snewlines",
+                Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
+        String warnStatement = String.format(
+                "warn statement%swith embedded%snewlines",
+                Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
+        String errorStatement = String.format(
+                "error statement%swith embedded%snewlines",
+                Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
+        String fatalStatement = String.format(
+                "fatal statement%swith embedded%snewlines",
+                Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
+
         logger.debug(debugStatement);
         logger.info(infoStatement);
         logger.warn(warnStatement);
@@ -734,7 +739,7 @@ public class Log4jMonitorTest {
 
         // When getStatements is called
         List<String> statements = log4jMonitor.getStatements(Level.DEBUG,
-        		rawPattern);
+                rawPattern);
 
         // Then an empty list should have been returned
         assertThat(statements.isEmpty(), is(true));
@@ -745,7 +750,7 @@ public class Log4jMonitorTest {
 
     }
 
-    @Test(expected=PatternSyntaxException.class)
+    @Test(expected = PatternSyntaxException.class)
     public void rawPatternNotCompileableAsPatternShouldThrow() {
         // Given a Log4jMonitor instance
         Log4jMonitor log4jMonitor = new Log4jMonitor();
@@ -757,9 +762,9 @@ public class Log4jMonitorTest {
         log4jMonitor.getStatements(Level.WARN, rawPattern);
 
         // Then a PatternSyntaxException should have been thrown
-        
+
     }
-    
+
     @Test(expected = UnsupportedOperationException.class)
     public void onlyStatementsMatchingRawPatternAndLevelShouldBeReturnedInAnUnmodifiableList() {
         // Given a Log4jMonitor instance
@@ -782,7 +787,7 @@ public class Log4jMonitorTest {
 
         // When getStatements is called
         List<String> statements = log4jMonitor.getStatements(Level.WARN,
-        		rawPattern);
+                rawPattern);
 
         // Then a 2-element list should have been returned
         assertThat(statements.size(), is(2));
