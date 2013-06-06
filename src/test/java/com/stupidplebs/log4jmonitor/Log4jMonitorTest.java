@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -204,6 +205,51 @@ public class Log4jMonitorTest {
         List<Log4jStatement> statements = log4jMonitor.getStatements();
         assertThat(statements.get(0),
                 is(Log4jStatement.getInstance(Level.FATAL, "fatal statement")));
+
+    }
+
+    @Test
+    public void getStatementsShouldDelimitOnNewLineConcatenatedWithLevels() {
+        // Given a Log4jMonitor instance returned by getDebugInstance
+        Log4jMonitor log4jMonitor = Log4jMonitor.getDebugInstance();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // When DEBUG, INFO, WARN, ERROR, and FATAL statements are logged
+        String debugStatement = String.format("debug statement%swith embedded%snewlines", 
+        		Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
+        String infoStatement = String.format("info statement%swith embedded%snewlines", 
+        		Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
+        String warnStatement = String.format("warn statement%swith embedded%snewlines", 
+        		Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
+        String errorStatement = String.format("error statement%swith embedded%snewlines", 
+        		Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
+        String fatalStatement = String.format("fatal statement%swith embedded%snewlines", 
+        		Log4jMonitor.LINE_SEPARATOR, Log4jMonitor.LINE_SEPARATOR);
+        
+        logger.debug(debugStatement);
+        logger.info(infoStatement);
+        logger.warn(warnStatement);
+        logger.error(errorStatement);
+        logger.fatal(fatalStatement);
+
+        // Then 5 statements should have been logged
+        assertThat(log4jMonitor.getStatementCount(), is(5));
+
+        // And the only the DEBUG, INFO, WARN, ERROR, and FATAL statements
+        // should be as logged in order
+        List<Log4jStatement> statements = log4jMonitor.getStatements();
+        assertThat(statements.get(0),
+                is(Log4jStatement.getInstance(Level.DEBUG, debugStatement)));
+        assertThat(statements.get(1),
+                is(Log4jStatement.getInstance(Level.INFO, infoStatement)));
+        assertThat(statements.get(2),
+                is(Log4jStatement.getInstance(Level.WARN, warnStatement)));
+        assertThat(statements.get(3),
+                is(Log4jStatement.getInstance(Level.ERROR, errorStatement)));
+        assertThat(statements.get(4),
+                is(Log4jStatement.getInstance(Level.FATAL, fatalStatement)));
 
     }
 
@@ -619,6 +665,124 @@ public class Log4jMonitorTest {
         // When getStatements is called
         List<String> statements = log4jMonitor.getStatements(Level.WARN,
                 pattern);
+
+        // Then a 2-element list should have been returned
+        assertThat(statements.size(), is(2));
+
+        // And the first statement should be "warn statement 1"
+        assertThat(statements.get(0), is("warn statement 1"));
+
+        // And the second statement should be "warn statement 3"
+        assertThat(statements.get(1), is("warn statement 3"));
+
+        // And attempting to modify that list should throw an
+        // UnsupportedOperationException
+        statements.clear();
+
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void nullLevelParameterToLevelSpecificRawPatternGetStatementsShouldReturnAnEmptyUnmodifiableList() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.debug("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // And a null Level
+        Level level = null;
+
+        // And a pattern that matches everything
+        String rawPattern = ".*";
+
+        // When getStatements is called
+        List<String> statements = log4jMonitor.getStatements(level, rawPattern);
+
+        // Then an empty list should have been returned
+        assertThat(statements.isEmpty(), is(true));
+
+        // And attempting to modify that list should throw an
+        // UnsupportedOperationException
+        statements.clear();
+
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void nullRawPatternParameterToLevelSpecificRawPatternGetStatementsShouldReturnAnEmptyUnmodifiableList() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.debug("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // And a null rawPattern
+        String rawPattern = null;
+
+        // When getStatements is called
+        List<String> statements = log4jMonitor.getStatements(Level.DEBUG,
+        		rawPattern);
+
+        // Then an empty list should have been returned
+        assertThat(statements.isEmpty(), is(true));
+
+        // And attempting to modify that list should throw an
+        // UnsupportedOperationException
+        statements.clear();
+
+    }
+
+    @Test(expected=PatternSyntaxException.class)
+    public void rawPatternNotCompileableAsPatternShouldThrow() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a regex that only matches warn statements 1 and 3
+        String rawPattern = "[";
+
+        // When getStatements is called
+        log4jMonitor.getStatements(Level.WARN, rawPattern);
+
+        // Then a PatternSyntaxException should have been thrown
+        
+    }
+    
+    @Test(expected = UnsupportedOperationException.class)
+    public void onlyStatementsMatchingRawPatternAndLevelShouldBeReturnedInAnUnmodifiableList() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.debug("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement 1");
+        logger.warn("warn statement 2");
+        logger.warn("warn statement 3");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // And a regex that only matches warn statements 1 and 3
+        String rawPattern = "[a-z]+ statement [13]";
+
+        // When getStatements is called
+        List<String> statements = log4jMonitor.getStatements(Level.WARN,
+        		rawPattern);
 
         // Then a 2-element list should have been returned
         assertThat(statements.size(), is(2));
