@@ -4,6 +4,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
+import java.util.regex.Pattern;
+
 import org.apache.log4j.Level;
 import org.junit.Test;
 
@@ -196,5 +198,135 @@ public class Log4jStatementTest {
         assertThat(log4jStatement.hashCode(), is(other.hashCode()));
 
     }
+    
+    @Test
+    public void matchesShouldReturnTrueIfThePatternMatchesTheStatement() {
+        // Given a Log4jStatement instance
+        Log4jStatement log4jStatement = new Log4jStatement(Level.ERROR,
+                "log statement");
 
+        // And a Pattern that matches the statement
+        Pattern pattern = Pattern.compile("l.g statement");
+        
+        // Expect matches to return true
+        assertThat(log4jStatement.matches(pattern), is(true));
+        
+    }
+    
+    @Test
+    public void matchesShouldReturnFalseIfThePatternDoesNotMatchTheStatement() {
+        // Given a Log4jStatement instance
+        Log4jStatement log4jStatement = new Log4jStatement(Level.ERROR,
+                "log statement");
+
+        // And a Pattern that doesn't match the statement
+        Pattern pattern = Pattern.compile("non-matching pattern");
+        
+        // Expect matches to return false
+        assertThat(log4jStatement.matches(pattern), is(false));
+        
+    }
+
+    @Test
+    public void isDebugShouldReturnTrueIfLevelIsDEBUG() {
+        // Given a Log4jStatement instance
+        Log4jStatement log4jStatement = new Log4jStatement(Level.DEBUG,
+                "log statement");
+
+        // Expect isDebug to return true
+        assertThat(log4jStatement.isDebug(), is(true));
+        
+        // And isInfo/Warn/Error/Fatal to return false
+        assertThat(log4jStatement.isInfo(), is(false));
+        assertThat(log4jStatement.isWarn(), is(false));
+        assertThat(log4jStatement.isError(), is(false));
+        assertThat(log4jStatement.isFatal(), is(false));
+        
+    }
+    
+    @Test
+    public void isInfoShouldReturnTrueIfLevelIsINFO() {
+        // Given a Log4jStatement instance
+        Log4jStatement log4jStatement = new Log4jStatement(Level.INFO,
+                "log statement");
+
+        // Expect isInfo to return true
+        assertThat(log4jStatement.isInfo(), is(true));
+        
+        // And isDebug/Warn/Error/Fatal to return false
+        assertThat(log4jStatement.isDebug(), is(false));
+        assertThat(log4jStatement.isWarn(), is(false));
+        assertThat(log4jStatement.isError(), is(false));
+        assertThat(log4jStatement.isFatal(), is(false));
+        
+    }
+    
+    @Test
+    public void isWarnShouldReturnTrueIfLevelIsWARN() {
+        // Given a Log4jStatement instance
+        Log4jStatement log4jStatement = new Log4jStatement(Level.WARN,
+                "log statement");
+
+        // Expect isWarn to return true
+        assertThat(log4jStatement.isWarn(), is(true));
+        
+        // And isDebug/Info/Warn/Error/Fatal to return false
+        assertThat(log4jStatement.isDebug(), is(false));
+        assertThat(log4jStatement.isInfo(), is(false));
+        assertThat(log4jStatement.isError(), is(false));
+        assertThat(log4jStatement.isFatal(), is(false));
+        
+    }
+    
+    @Test
+    public void isErrorShouldReturnTrueIfLevelIsERROR() {
+        // Given a Log4jStatement instance
+        Log4jStatement log4jStatement = new Log4jStatement(Level.ERROR,
+                "log statement");
+
+        // Expect isError to return true
+        assertThat(log4jStatement.isError(), is(true));
+        
+        // And isDebug/Info/Warn/Fatal to return false
+        assertThat(log4jStatement.isDebug(), is(false));
+        assertThat(log4jStatement.isInfo(), is(false));
+        assertThat(log4jStatement.isWarn(), is(false));
+        assertThat(log4jStatement.isFatal(), is(false));
+        
+    }
+    
+    @Test
+    public void isFatalShouldReturnTrueIfLevelIsFATAL() {
+        // Given a Log4jStatement instance
+        Log4jStatement log4jStatement = new Log4jStatement(Level.FATAL,
+                "log statement");
+
+        // Expect isFatal to return true
+        assertThat(log4jStatement.isFatal(), is(true));
+        
+        // And isDebug/Info/Warn/Error to return false
+        assertThat(log4jStatement.isDebug(), is(false));
+        assertThat(log4jStatement.isInfo(), is(false));
+        assertThat(log4jStatement.isWarn(), is(false));
+        assertThat(log4jStatement.isError(), is(false));
+        
+    }
+    
+    @Test
+    public void isShouldReturnTrueIfLevelMatchesSuppliedLevel() {
+        // Given a Log4jStatement instance
+        Log4jStatement log4jStatement = new Log4jStatement(Level.FATAL,
+                "log statement");
+
+        // Expect is(Fatal) to return true
+        assertThat(log4jStatement.is(Level.FATAL), is(true));
+        
+        // And isDebug/Info/Warn/Error to return false
+        assertThat(log4jStatement.is(Level.DEBUG), is(false));
+        assertThat(log4jStatement.is(Level.INFO), is(false));
+        assertThat(log4jStatement.is(Level.ERROR), is(false));
+        assertThat(log4jStatement.is(Level.WARN), is(false));
+        
+    }
+    
 }

@@ -1,5 +1,8 @@
 package com.stupidplebs.log4jmonitor;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.log4j.Level;
 
 public class Log4jStatement {
@@ -30,6 +33,41 @@ public class Log4jStatement {
 
     public String getStatement() {
         return statement;
+    }
+
+    public Boolean isDebug() {
+        return is(Level.DEBUG);
+    }
+    
+    public Boolean isInfo() {
+        return is(Level.INFO);
+    }
+    
+    public Boolean isWarn() {
+        return is(Level.WARN);
+    }
+    
+    public Boolean isError() {
+        return is(Level.ERROR);
+    }
+    
+    public Boolean isFatal() {
+        return is(Level.FATAL);
+    }
+    
+    public Boolean is(final Level level) {
+        return this.level.equals(level);
+    }
+    
+    public Boolean matches(final Pattern pattern) {
+        final Matcher matcher = pattern.matcher(statement);
+        
+        if (matcher.matches()) {
+            return true;
+        }
+        
+        return false;
+        
     }
 
     @Override

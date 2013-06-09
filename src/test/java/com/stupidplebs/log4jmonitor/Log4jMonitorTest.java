@@ -4,6 +4,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -278,15 +280,12 @@ public class Log4jMonitorTest {
         PrintStream printStream = new PrintStream(byteArrayOutputStream);
         System.setErr(printStream);
 
-        // And the newline character
-        String LINE_SEPARATOR = System.getProperty("line.separator");
-
         // When dumpToStdError is called
         log4jMonitor.dumpToStdError();
 
         // Then all statements should have been dumped to STDERR
         String[] statements = new String(byteArrayOutputStream.toByteArray())
-                .split(LINE_SEPARATOR);
+                .split(Log4jMonitor.LINE_SEPARATOR);
         assertThat(statements.length, is(5));
         assertThat(statements[0],
                 is("com.stupidplebs.log4jmonitor.Log4jStatement"
@@ -306,6 +305,111 @@ public class Log4jMonitorTest {
 
     }
 
+    @Test
+    public void dumpToStdErrorShouldWriteOnlyMessagesOfSuppliedLevelToStdError() {
+        // Given a Log4jMonitor instance returned by getDebugInstance
+        Log4jMonitor log4jMonitor = Log4jMonitor.getDebugInstance();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And statements are logged
+        logger.debug("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // And a ByteArrayOutputStream that will be written to by stderr
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(byteArrayOutputStream);
+        System.setErr(printStream);
+
+        // When dumpToStdError is called
+        log4jMonitor.dumpToStdError(Level.WARN);
+
+        // Then all statements should have been dumped to STDERR
+        String[] statements = new String(byteArrayOutputStream.toByteArray())
+                .split(Log4jMonitor.LINE_SEPARATOR);
+        assertThat(statements.length, is(1));
+        assertThat(statements[0],
+                is("com.stupidplebs.log4jmonitor.Log4jStatement"
+                        + "[level=WARN,statement=warn statement]"));
+
+    }
+
+    @Test
+    public void dumpToOutputStreamShouldWriteAllMessagesToOutputStream() throws IOException {
+        // Given a Log4jMonitor instance returned by getDebugInstance
+        Log4jMonitor log4jMonitor = Log4jMonitor.getDebugInstance();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And statements are logged
+        logger.debug("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // And a ByteArrayOutputStream that will be written to by stderr
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        // When dumpToOutputStream is called
+        log4jMonitor.dumpToOutputStream(byteArrayOutputStream);
+
+        // Then all statements should have been written to the OutputStream
+        String[] statements = new String(byteArrayOutputStream.toByteArray()).split(Log4jMonitor.LINE_SEPARATOR);
+        
+        assertThat(statements.length, is(5));
+        assertThat(statements[0],
+                is("com.stupidplebs.log4jmonitor.Log4jStatement"
+                        + "[level=DEBUG,statement=debug statement]"));
+        assertThat(statements[1],
+                is("com.stupidplebs.log4jmonitor.Log4jStatement"
+                        + "[level=INFO,statement=info statement]"));
+        assertThat(statements[2],
+                is("com.stupidplebs.log4jmonitor.Log4jStatement"
+                        + "[level=WARN,statement=warn statement]"));
+        assertThat(statements[3],
+                is("com.stupidplebs.log4jmonitor.Log4jStatement"
+                        + "[level=ERROR,statement=error statement]"));
+        assertThat(statements[4],
+                is("com.stupidplebs.log4jmonitor.Log4jStatement"
+                        + "[level=FATAL,statement=fatal statement]"));
+
+    }
+
+    @Test(expected=IOException.class)
+    public void dumpToOutputStreamWithBrokenOutputStreamShouldRethrowIOException() 
+    throws IOException {
+        // Given a Log4jMonitor instance returned by getDebugInstance
+        Log4jMonitor log4jMonitor = Log4jMonitor.getDebugInstance();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And statements are logged
+        logger.debug("debug statement");
+
+        // And a broken OutputStream
+        OutputStream brokenOutputStream = new OutputStream() {
+
+            @Override
+            public void write(int b) throws IOException {
+                throw new IOException("purposeful fail");
+            }
+            
+        };
+        
+        // When dumpToOutputStream is called
+        log4jMonitor.dumpToOutputStream(brokenOutputStream);
+
+        // Then an IOException should be thrown
+        
+    }
+    
     @Test
     public void getStatementCountShouldReturnTheNumberOfStatementsLoggedAtTheSpecifiedLevel() {
         // Given a Log4jMonitor instance returned by getDebugInstance
@@ -804,4 +908,314 @@ public class Log4jMonitorTest {
 
     }
 
+    @Test
+    public void isDebugStatementShouldReturnTrueIfPatternMatchesAtLeastOneDEBUGLevelStatement() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.debug("debug statement 1");
+        logger.debug("debug statement 2");
+        logger.debug("debug statement 3");
+        logger.info("info statement");
+        logger.warn("warn statement");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // And a regex that only matches statements suffixed with 1 or 3
+        Pattern pattern = Pattern.compile("[a-z]+ statement [13]");
+
+        // Expect isDebugStatement to return true since the pattern matches at least 1 DEBUG statement
+        assertThat(log4jMonitor.isDebugStatement(pattern), is(true));
+        
+    }
+    
+    @Test
+    public void isInfoStatementShouldReturnTrueIfPatternMatchesAtLeastOneINFOLevelStatement() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.debug("debug statement");
+        logger.info("info statement 1");
+        logger.info("info statement 2");
+        logger.info("info statement 3");
+        logger.warn("warn statement");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // And a regex that only matches statements suffixed with 1 or 3
+        Pattern pattern = Pattern.compile("[a-z]+ statement [13]");
+
+        // Expect isDebugStatement to return true since the pattern matches at least 1 DEBUG statement
+        assertThat(log4jMonitor.isInfoStatement(pattern), is(true));
+        
+    }
+    
+    @Test
+    public void isWarnStatementShouldReturnTrueIfPatternMatchesAtLeastOneWARNLevelStatement() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.debug("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement 1");
+        logger.warn("warn statement 2");
+        logger.warn("warn statement 3");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // And a regex that only matches statements suffixed with 1 or 3
+        Pattern pattern = Pattern.compile("[a-z]+ statement [13]");
+
+        // Expect isDebugStatement to return true since the pattern matches at least 1 DEBUG statement
+        assertThat(log4jMonitor.isWarnStatement(pattern), is(true));
+        
+    }
+    
+    @Test
+    public void isErrorStatementShouldReturnTrueIfPatternMatchesAtLeastOneERRORLevelStatement() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.error("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement");
+        logger.error("error statement 1");
+        logger.error("error statement 2");
+        logger.error("error statement 3");
+        logger.fatal("fatal statement");
+
+        // And a regex that only matches statements suffixed with 1 or 3
+        Pattern pattern = Pattern.compile("[a-z]+ statement [13]");
+
+        // Expect isDebugStatement to return true since the pattern matches at least 1 DEBUG statement
+        assertThat(log4jMonitor.isErrorStatement(pattern), is(true));
+        
+    }
+    
+    @Test
+    public void isFatalStatementShouldReturnTrueIfPatternMatchesAtLeastOneFATALLevelStatement() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.fatal("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement");
+        logger.error("error statement");
+        logger.fatal("fatal statement 1");
+        logger.fatal("fatal statement 2");
+        logger.fatal("fatal statement 3");
+
+        // And a regex that only matches statements suffixed with 1 or 3
+        Pattern pattern = Pattern.compile("[a-z]+ statement [13]");
+
+        // Expect isDebugStatement to return true since the pattern matches at least 1 DEBUG statement
+        assertThat(log4jMonitor.isFatalStatement(pattern), is(true));
+        
+    }
+    
+    @Test
+    public void isDebugStatementShouldReturnFalseIfPatternDoesNotMatchAnyDEBUGLevelStatements() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.debug("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // And a regex that doesn't match anything
+        Pattern pattern = Pattern.compile("pattern that doesn't match anything");
+
+        // Expect isDebugStatement to return false since the pattern doesn't match any DEBUG statements
+        assertThat(log4jMonitor.isDebugStatement(pattern), is(false));
+        
+    }
+    
+    @Test
+    public void isInfoStatementShouldReturnFalseIfPatternDoesNotMatchAnyINFOLevelStatements() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.debug("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // And a regex that doesn't match anything
+        Pattern pattern = Pattern.compile("pattern that doesn't match anything");
+
+        // Expect isInfoStatement to return false since the pattern doesn't match any INFO statements
+        assertThat(log4jMonitor.isInfoStatement(pattern), is(false));
+        
+    }
+    
+    @Test
+    public void isWarnStatementShouldReturnFalseIfPatternDoesNotMatchAnyWARNLevelStatements() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.debug("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // And a regex that doesn't match anything
+        Pattern pattern = Pattern.compile("pattern that doesn't match anything");
+
+        // Expect isWarnStatement to return false since the pattern doesn't match any WARN statements
+        assertThat(log4jMonitor.isWarnStatement(pattern), is(false));
+        
+    }
+    
+    @Test
+    public void isErrorStatementShouldReturnFalseIfPatternDoesNotMatchAnyERRORLevelStatements() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.error("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // And a regex that doesn't match anything
+        Pattern pattern = Pattern.compile("pattern that doesn't match anything");
+
+        // Expect isErrorStatement to return false since the pattern doesn't match any ERROR statements
+        assertThat(log4jMonitor.isErrorStatement(pattern), is(false));
+        
+    }
+    
+    @Test
+    public void isFatalStatementShouldReturnFalseIfPatternDoesNotMatchAnyFATALLevelStatements() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.fatal("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // And a regex that doesn't match anything
+        Pattern pattern = Pattern.compile("pattern that doesn't match anything");
+
+        // Expect isFatalStatement to return false since the pattern doesn't match any FATAL statements
+        assertThat(log4jMonitor.isFatalStatement(pattern), is(false));
+        
+    }
+    
+    @Test
+    public void isStatementShouldReturnTrueIfAtLeastOneStatementMatchesThePattern() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.fatal("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // Expect isStatement to return true since the pattern matches the DEBUG statement
+        assertThat(log4jMonitor.isStatement(Pattern.compile("d.bug statement")), is(true));
+
+        // And isStatement to return true since the pattern matches the INFO statement
+        assertThat(log4jMonitor.isStatement(Pattern.compile("i.fo statement")), is(true));
+
+        // And isStatement to return true since the pattern matches the WARN statement
+        assertThat(log4jMonitor.isStatement(Pattern.compile("w.rn statement")), is(true));
+
+        // And isStatement to return true since the pattern matches the ERROR statement
+        assertThat(log4jMonitor.isStatement(Pattern.compile("e.ror statement")), is(true));
+
+        // And isStatement to return true since the pattern matches the FATAL statement
+        assertThat(log4jMonitor.isStatement(Pattern.compile("f.tal statement")), is(true));
+           
+        // And isStatement to return false since the pattern doesn't match any statement
+        assertThat(log4jMonitor.isStatement(Pattern.compile("doesn't match any statements")), is(false));
+        
+    }
+    
+    @Test
+    public void isStatementShouldReturnTrueIfAtLeastOneStatementEqualsTheInputStatement() {
+        // Given a Log4jMonitor instance
+        Log4jMonitor log4jMonitor = new Log4jMonitor();
+
+        // And a logger
+        Logger logger = Logger.getLogger(Log4jMonitorTest.class);
+
+        // And logged DEBUG, INFO, WARN, ERROR, and FATAL statements
+        logger.fatal("debug statement");
+        logger.info("info statement");
+        logger.warn("warn statement");
+        logger.error("error statement");
+        logger.fatal("fatal statement");
+
+        // Expect isStatement to return true since the input equals the DEBUG statement
+        assertThat(log4jMonitor.isStatement(Pattern.compile("debug statement")), is(true));
+
+        // And isStatement to return true since the input equals the INFO statement
+        assertThat(log4jMonitor.isStatement(Pattern.compile("info statement")), is(true));
+
+        // And isStatement to return true since the input equals the WARN statement
+        assertThat(log4jMonitor.isStatement(Pattern.compile("warn statement")), is(true));
+
+        // And isStatement to return true since the input equals the ERROR statement
+        assertThat(log4jMonitor.isStatement(Pattern.compile("error statement")), is(true));
+
+        // And isStatement to return true since the input equals the FATAL statement
+        assertThat(log4jMonitor.isStatement(Pattern.compile("fatal statement")), is(true));
+           
+        // And isStatement to return false since the input doesn't equals any statement
+        assertThat(log4jMonitor.isStatement(Pattern.compile("unknown statement")), is(false));
+        
+    }
+    
 }

@@ -1,6 +1,8 @@
 package com.stupidplebs.log4jmonitor;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -271,6 +273,34 @@ public class Log4jMonitor {
     }
 
     /**
+     * Helper method that just dumps level-specific logged statements to stderr (useful
+     * for debugging tests)
+     * 
+     */
+    public void dumpToStdError(final Level level) {
+        for (final Log4jStatement statement : getStatements()) {
+            if (level.equals(statement.getLevel())) {
+                System.err.println(statement);
+            }
+        }
+
+    }
+
+    /**
+     * Helper method that just dumps all the logged statements to an OutputStream (useful
+     * for debugging tests)
+     * @throws IOException 
+     * 
+     */
+    public void dumpToOutputStream(final OutputStream outputStream) throws IOException {
+        for (final Log4jStatement statement : getStatements()) {
+            outputStream.write(statement.toString().getBytes());
+            outputStream.write(LINE_SEPARATOR.getBytes());
+        }
+
+    }
+
+    /**
      * Return whether a statement was logged at the specific level
      * 
      * @param level
@@ -290,6 +320,17 @@ public class Log4jMonitor {
     }
 
     /**
+     * Return whether a statement was logged at the specific level
+     * 
+     * @param level
+     * @param statement
+     * @return
+     */
+    public Boolean isStatement(final Level level, final Pattern pattern) {
+        return !getStatements(level, pattern).isEmpty();
+    }
+
+    /**
      * Verify if the supplied statement was logged at the DEBUG level
      * 
      * @param statement
@@ -300,6 +341,17 @@ public class Log4jMonitor {
         return isStatement(Level.DEBUG, statement);
     }
 
+    /**
+     * Verify if the supplied Pattern matches any DEBUG-level statement
+     * 
+     * @param pattern
+     * @return true if at least 1 DEBUG statement matches the supplied pattern, 
+     *         false otherwise
+     */
+    public Boolean isDebugStatement(final Pattern pattern) {
+        return isStatement(Level.DEBUG, pattern);
+    }
+    
     /**
      * Verify if the supplied statement was logged at the INFO level
      * 
@@ -312,6 +364,17 @@ public class Log4jMonitor {
     }
 
     /**
+     * Verify if the supplied Pattern matches any INFO-level statement
+     * 
+     * @param pattern
+     * @return true if at least 1 INFO statement matches the supplied pattern, 
+     *         false otherwise
+     */
+    public Boolean isInfoStatement(final Pattern pattern) {
+        return isStatement(Level.INFO, pattern);
+    }
+    
+    /**
      * Verify if the supplied statement was logged at the WARN level
      * 
      * @param statement
@@ -322,6 +385,17 @@ public class Log4jMonitor {
         return isStatement(Level.WARN, statement);
     }
 
+    /**
+     * Verify if the supplied Pattern matches any WARN-level statement
+     * 
+     * @param pattern
+     * @return true if at least 1 WARN statement matches the supplied pattern, 
+     *         false otherwise
+     */
+    public Boolean isWarnStatement(final Pattern pattern) {
+        return isStatement(Level.WARN, pattern);
+    }
+    
     /**
      * Verify if the supplied statement was logged at the ERROR level
      * 
@@ -334,6 +408,17 @@ public class Log4jMonitor {
     }
 
     /**
+     * Verify if the supplied Pattern matches any INFO-level statement
+     * 
+     * @param pattern
+     * @return true if at least 1 ERROR statement matches the supplied pattern, 
+     *         false otherwise
+     */
+    public Boolean isErrorStatement(final Pattern pattern) {
+        return isStatement(Level.ERROR, pattern);
+    }
+    
+    /**
      * Verify if the supplied statement was logged at the FATAL level
      * 
      * @param statement
@@ -344,4 +429,51 @@ public class Log4jMonitor {
         return isStatement(Level.FATAL, statement);
     }
 
+    /**
+     * Verify if the supplied Pattern matches any FATAL-level statement
+     * 
+     * @param pattern
+     * @return true if at least 1 FATAL statement matches the supplied pattern, 
+     *         false otherwise
+     */
+    public Boolean isFatalStatement(final Pattern pattern) {
+        return isStatement(Level.FATAL, pattern);
+    }
+    
+    /**
+     * Verify if the statement equals a statement of any level
+     * 
+     * @param pattern
+     * @return true if at least 1 statement equals the supplied statement, 
+     *         false otherwise
+     */
+    public Boolean isStatement(final String statement) {
+        for (final Log4jStatement log4jStatement : getStatements()) {
+            if (log4jStatement.getStatement().equals(statement)) {
+                return true;
+            }
+        }
+        
+        return false;
+        
+    }
+    
+    /**
+     * Verify if the supplied Pattern matches a statement of any level
+     * 
+     * @param pattern
+     * @return true if at least 1 statement matches the supplied pattern, 
+     *         false otherwise
+     */
+    public Boolean isStatement(final Pattern pattern) {
+        for (final Log4jStatement log4jStatement : getStatements()) {
+            if (log4jStatement.matches(pattern)) {
+                return true;
+            }
+        }
+        
+        return false;
+        
+    }
+    
 }
