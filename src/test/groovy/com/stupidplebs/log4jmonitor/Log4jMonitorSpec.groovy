@@ -6,6 +6,8 @@ import java.util.regex.PatternSyntaxException
 import org.apache.log4j.Level
 import org.apache.log4j.Logger
 
+import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
+
 import spock.lang.Specification
 
 class Log4jMonitorSpec extends Specification {
@@ -292,7 +294,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "dumpToOutputStreamShouldWriteAllMessagesToOutputStream"() {
+    def "dumpToOutputStream should write all messages to outputStream"() {
         given:
         def log4jMonitor = Log4jMonitor.getDebugInstance()
 
@@ -330,7 +332,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "dumpToOutputStreamWithBrokenOutputStreamShouldRethrowIOException"() {
+    def "dumpToOutputStream with broken outputStream should rethrow IOException"() {
         given:
         def log4jMonitor = Log4jMonitor.getDebugInstance()
 
@@ -357,7 +359,7 @@ class Log4jMonitorSpec extends Specification {
         
     }
     
-    def "getStatementCountShouldReturnTheNumberOfStatementsLoggedAtTheSpecifiedLevel"() {
+    def "getStatementCount should return the number of statements logged at the specified level"() {
         given:
         def log4jMonitor = Log4jMonitor.getDebugInstance()
 
@@ -403,7 +405,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "isDebugStatementShouldReturnTrueIfAStatementWasLoggedAtDebugLevel"() {
+    def "isDebugStatement should return true if a statement was logged at DEBUG level"() {
         given:
         def log4jMonitor = Log4jMonitor.getDebugInstance()
 
@@ -451,7 +453,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "isInfoStatementShouldReturnFalseIfAStatementWasNotLoggedAtInfoLevel"() {
+    def "isInfoStatement should return false if a statement was not logged at INFO level"() {
         given:
         def log4jMonitor = Log4jMonitor.getInfoInstance()
 
@@ -483,7 +485,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "isWarnStatementShouldReturnFalseIfAStatementWasNotLoggedAtWarnLevel"() {
+    def "isWarnStatement should return false if a statement was not logged at WARN level"() {
         given:
         def log4jMonitor = Log4jMonitor.getWarnInstance()
 
@@ -515,7 +517,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "isErrorStatementShouldReturnFalseIfAStatementWasNotLoggedAtErrorLevel"() {
+    def "isErrorStatement should return false if a statement was not logged at ERROR level"() {
         given:
         def log4jMonitor = Log4jMonitor.getErrorInstance()
 
@@ -547,7 +549,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "isFatalStatementShouldReturnFalseIfAStatementWasNotLoggedAtFatalLevel"() {
+    def "isFatalStatement should return false if a statement was not logged at FATAL level"() {
         given:
         def log4jMonitor = Log4jMonitor.getFatalInstance()
 
@@ -563,7 +565,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "nullLevelParameterToLevelSpecificGetStatementsShouldReturnAnEmptyUnmodifiableList"() {
+    def "null level parameter to level-specific getStatements should return an empty unmodifiable list"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -597,7 +599,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "nullPatternParameterToLevelSpecificGetStatementsShouldReturnAnEmptyUnmodifiableList"() {
+    def "null pattern parameter to level-specific getStatements should return an empty unmodifiable list"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -626,7 +628,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "onlyStatementsMatchingPatternAndLevelShouldBeReturnedInAnUnmodifiableList"() {
+    def "only statements matching pattern and level should be returned in an unmodifiable list"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
