@@ -1,6 +1,5 @@
 package com.stupidplebs.log4jmonitor;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Level;
@@ -60,14 +59,7 @@ public class Log4jStatement {
     }
     
     public Boolean matches(final Pattern pattern) {
-        final Matcher matcher = pattern.matcher(statement);
-        
-        if (matcher.matches()) {
-            return true;
-        }
-        
-        return false;
-        
+    	return pattern.matcher(statement).matches();
     }
 
     @Override
