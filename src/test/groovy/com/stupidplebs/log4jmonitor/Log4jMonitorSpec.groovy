@@ -49,6 +49,30 @@ class Log4jMonitorSpec extends Specification {
 		
 	}
 
+	def "getLevel should return the level supplied to constructor"() {
+		given:
+		def log4jMonitor = new Log4jMonitor(inputLevel)
+
+		when: 
+		def actualLevel = log4jMonitor.level
+
+		then:
+		actualLevel == inputLevel
+
+		where:
+		inputLevel << [Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL]
+		
+	}
+
+	def "zero-parameter constructor should return DEBUG for getLevel"() {
+		given:
+		def log4jMonitor = new Log4jMonitor()
+
+		expect:
+		log4jMonitor.level == Level.DEBUG
+
+	}
+		
 	def "getDebugInstance should log statements at all levels"() {
 		given:
 		def log4jMonitor = Log4jMonitor.debugInstance

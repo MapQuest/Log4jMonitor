@@ -79,6 +79,15 @@ public class Log4jMonitor {
     }
 
     /**
+     * Method that returns the level the root logger is logging at
+     * 
+     * @return the level the root logger is logging at
+     */
+    public Level getLevel() {
+    	return Logger.getRootLogger().getLevel();
+    }
+    
+    /**
      * Helper factory method for returning an instance that only logs DEBUG,
      * INFO, WARN, ERROR, and FATAL statements
      * 
