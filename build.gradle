@@ -1,8 +1,17 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
+apply plugin: 'cobertura'
 
-// instruct Gradle to look in mavenCentral repository first, then the /lib directory 
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath "net.saliman:gradle-cobertura-plugin:2.2.2"
+	}
+}
+
 repositories {
 	mavenCentral()
 }
@@ -12,4 +21,8 @@ dependencies {
 	
 	testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
 
+}
+
+cobertura {
+	coverageFormats = ['xml', 'html']
 }
