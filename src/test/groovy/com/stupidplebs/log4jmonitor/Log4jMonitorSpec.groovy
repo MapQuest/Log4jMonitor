@@ -437,7 +437,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "isInfoStatementShouldReturnTrueIfAStatementWasLoggedAtInfoLevel"() {
+    def "isInfoStatement should return true if a statement was logged at INFO level"() {
         given:
         def log4jMonitor = Log4jMonitor.getInfoInstance()
 
@@ -469,7 +469,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "isWarnStatementShouldReturnTrueIfAStatementWasLoggedAtWarnLevel"() {
+    def "isWarnStatement should return true if a statement was logged at WARN level"() {
         given:
         def log4jMonitor = Log4jMonitor.getWarnInstance()
 
@@ -501,7 +501,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "isErrorStatementShouldReturnTrueIfAStatementWasLoggedAtErrorLevel"() {
+    def "isErrorStatement should return true if a statement was logged at ERROR level"() {
         given:
         def log4jMonitor = Log4jMonitor.getErrorInstance()
 
@@ -662,7 +662,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "nullLevelParameterToLevelSpecificRawPatternGetStatementsShouldReturnAnEmptyUnmodifiableList"() {
+    def "null level parameter to level-specific raw pattern getStatements should return an empty unmodifiable list"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -696,7 +696,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "nullRawPatternParameterToLevelSpecificRawPatternGetStatementsShouldReturnAnEmptyUnmodifiableList"() {
+    def "null raw pattern parameter to level-specific raw pattern getStatements should return an empty unmodifiable list"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -725,7 +725,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "rawPatternNotCompileableAsPatternShouldThrow"() {
+    def "raw pattern not compileable as pattern should throw root exception"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -740,7 +740,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
 
-    def "onlyStatementsMatchingRawPatternAndLevelShouldBeReturnedInAnUnmodifiableList"() {
+    def "only statements matching raw pattern and level should be returned in an unmodifiable list"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -774,7 +774,7 @@ class Log4jMonitorSpec extends Specification {
 		
     }
 
-    def "isDebugStatementShouldReturnTrueIfPatternMatchesAtLeastOneDEBUGLevelStatement"() {
+    def "isDebugStatement should return true if pattern matches at least one FATAL-level statement"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -798,7 +798,7 @@ class Log4jMonitorSpec extends Specification {
         
     }
     
-    def "isInfoStatementShouldReturnTrueIfPatternMatchesAtLeastOneINFOLevelStatement"() {
+    def "isInfoStatement should return true if pattern matches at least one INFO-level statement"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -822,7 +822,7 @@ class Log4jMonitorSpec extends Specification {
         
     }
     
-    def "isWarnStatementShouldReturnTrueIfPatternMatchesAtLeastOneWARNLevelStatement"() {
+    def "isWarnStatement should return true if pattern matches at least one WARN-level statement"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -846,7 +846,7 @@ class Log4jMonitorSpec extends Specification {
         
     }
     
-    def "isErrorStatementShouldReturnTrueIfPatternMatchesAtLeastOneERRORLevelStatement"() {
+    def "isErrorStatement should return true if pattern matches at least one ERROR-level statement"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -870,7 +870,7 @@ class Log4jMonitorSpec extends Specification {
         
     }
     
-    def "isFatalStatementShouldReturnTrueIfPatternMatchesAtLeastOneFATALLevelStatement"() {
+    def "isFatalStatement should return true if pattern matches at least one FATAL-level statement"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -894,7 +894,7 @@ class Log4jMonitorSpec extends Specification {
         
     }
     
-    def "isDebugStatementShouldReturnFalseIfPatternDoesNotMatchAnyDEBUGLevelStatements"() {
+    def "isDebugStatement should return false if pattern does not match any DEBUG-level statements"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -916,7 +916,7 @@ class Log4jMonitorSpec extends Specification {
         
     }
     
-    def "isInfoStatementShouldReturnFalseIfPatternDoesNotMatchAnyINFOLevelStatements"() {
+    def "isInfoStatement should return false if pattern does not match any INFO-level statements"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -938,7 +938,7 @@ class Log4jMonitorSpec extends Specification {
         
     }
     
-    def "isWarnStatementShouldReturnFalseIfPatternDoesNotMatchAnyWARNLevelStatements"() {
+    def "isWarnStatement should return false if pattern does not match any WARN-level statements"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -960,7 +960,7 @@ class Log4jMonitorSpec extends Specification {
         
     }
     
-    def "isErrorStatementShouldReturnFalseIfPatternDoesNotMatchAnyERRORLevelStatements"() {
+    def "isErrorStatement should return false if pattern does not match any ERROR-level statements"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -982,7 +982,7 @@ class Log4jMonitorSpec extends Specification {
         
     }
     
-    def "isFatalStatementShouldReturnFalseIfPatternDoesNotMatchAnyFATALLevelStatements"() {
+    def "isFatalStatement should return false if pattern does not match any FATAL-level statements"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -1004,7 +1004,7 @@ class Log4jMonitorSpec extends Specification {
         
     }
     
-    def "isStatementShouldReturnTrueIfAtLeastOneStatementMatchesThePattern"() {
+    def "isStatement should return true if at least one statement matches the pattern"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -1028,7 +1028,7 @@ class Log4jMonitorSpec extends Specification {
 
     }
     
-    def "isStatementShouldReturnTrueIfAtLeastOneStatementEqualsTheInputStatement"() {
+    def "isStatement should return true if at least one statement equals the input statement"() {
         given:
         def log4jMonitor = new Log4jMonitor()
 
@@ -1052,4 +1052,124 @@ class Log4jMonitorSpec extends Specification {
         
     }
     
+	def "getDebugStatements should only return DEBUG-level statements"() {
+		given:
+		def log4jMonitor = new Log4jMonitor()
+
+		and:
+		def logger = Logger.getLogger(Log4jMonitor.class)
+
+		and:
+		logger.debug("debug statement 1")
+		logger.info("info statement 1")
+		logger.warn("warn statement 1")
+		logger.error("error statement 1")
+		logger.fatal("fatal statement 1")
+		logger.debug("debug statement 2")
+		logger.info("info statement 2")
+		logger.warn("warn statement 2")
+		logger.error("error statement 2")
+		logger.fatal("fatal statement 2")
+
+		expect:
+		log4jMonitor.debugStatements == ["debug statement 1", "debug statement 2"]
+		
+	}
+	
+	def "getInfoStatements should only return INFO-level statements"() {
+		given:
+		def log4jMonitor = new Log4jMonitor()
+
+		and:
+		def logger = Logger.getLogger(Log4jMonitor.class)
+
+		and:
+		logger.debug("debug statement 1")
+		logger.info("info statement 1")
+		logger.warn("warn statement 1")
+		logger.error("error statement 1")
+		logger.fatal("fatal statement 1")
+		logger.debug("debug statement 2")
+		logger.info("info statement 2")
+		logger.warn("warn statement 2")
+		logger.error("error statement 2")
+		logger.fatal("fatal statement 2")
+
+		expect:
+		log4jMonitor.infoStatements == ["info statement 1", "info statement 2"]
+		
+	}
+	
+	def "getWarnStatements should only return WARN-level statements"() {
+		given:
+		def log4jMonitor = new Log4jMonitor()
+
+		and:
+		def logger = Logger.getLogger(Log4jMonitor.class)
+
+		and:
+		logger.debug("debug statement 1")
+		logger.info("info statement 1")
+		logger.warn("warn statement 1")
+		logger.error("error statement 1")
+		logger.fatal("fatal statement 1")
+		logger.debug("debug statement 2")
+		logger.info("info statement 2")
+		logger.warn("warn statement 2")
+		logger.error("error statement 2")
+		logger.fatal("fatal statement 2")
+
+		expect:
+		log4jMonitor.warnStatements == ["warn statement 1", "warn statement 2"]
+		
+	}
+	
+	def "getErrorStatements should only return ERROR-level statements"() {
+		given:
+		def log4jMonitor = new Log4jMonitor()
+
+		and:
+		def logger = Logger.getLogger(Log4jMonitor.class)
+
+		and:
+		logger.debug("debug statement 1")
+		logger.info("info statement 1")
+		logger.warn("warn statement 1")
+		logger.error("error statement 1")
+		logger.fatal("fatal statement 1")
+		logger.debug("debug statement 2")
+		logger.info("info statement 2")
+		logger.warn("warn statement 2")
+		logger.error("error statement 2")
+		logger.fatal("fatal statement 2")
+
+		expect:
+		log4jMonitor.errorStatements == ["error statement 1", "error statement 2"]
+		
+	}
+	
+	def "getFatalStatements should only return FATAL-level statements"() {
+		given:
+		def log4jMonitor = new Log4jMonitor()
+
+		and:
+		def logger = Logger.getLogger(Log4jMonitor.class)
+
+		and:
+		logger.debug("debug statement 1")
+		logger.info("info statement 1")
+		logger.warn("warn statement 1")
+		logger.error("error statement 1")
+		logger.fatal("fatal statement 1")
+		logger.debug("debug statement 2")
+		logger.info("info statement 2")
+		logger.warn("warn statement 2")
+		logger.error("error statement 2")
+		logger.fatal("fatal statement 2")
+
+		expect:
+		log4jMonitor.fatalStatements == ["fatal statement 1", "fatal statement 2"]
+		
+	}
+	
 }

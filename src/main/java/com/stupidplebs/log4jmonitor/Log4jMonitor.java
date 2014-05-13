@@ -230,6 +230,51 @@ public class Log4jMonitor {
     }
 
     /**
+     * Get all DEBUG logged statements
+     * 
+     * @return a List of all logged statements of a specific severity level
+     */
+    public List<String> getDebugStatements() {
+    	return getStatements(Level.DEBUG);
+    }
+    
+    /**
+     * Get all INFO logged statements
+     * 
+     * @return a List of all logged statements of a specific severity level
+     */
+    public List<String> getInfoStatements() {
+    	return getStatements(Level.INFO);
+    }
+    
+    /**
+     * Get all WARN logged statements
+     * 
+     * @return a List of all logged statements of a specific severity level
+     */
+    public List<String> getWarnStatements() {
+    	return getStatements(Level.WARN);
+    }
+    
+    /**
+     * Get all ERROR logged statements
+     * 
+     * @return a List of all logged statements of a specific severity level
+     */
+    public List<String> getErrorStatements() {
+    	return getStatements(Level.ERROR);
+    }
+    
+    /**
+     * Get all FATAL logged statements
+     * 
+     * @return a List of all logged statements of a specific severity level
+     */
+    public List<String> getFatalStatements() {
+    	return getStatements(Level.FATAL);
+    }
+    
+    /**
      * Get the number of statements logged
      * 
      * @param level
