@@ -77,9 +77,8 @@ public class Log4jStatement {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((level == null) ? 0 : level.hashCode());
-        result = prime * result
-                + ((statement == null) ? 0 : statement.hashCode());
+        result = prime * result + level.hashCode();
+        result = prime * result + statement.hashCode();
         return result;
     }
 
