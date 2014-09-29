@@ -84,7 +84,7 @@ public class Log4jMonitor {
      * @return the level the root logger is logging at
      */
     public Level getLevel() {
-    	return Logger.getRootLogger().getLevel();
+        return Logger.getRootLogger().getLevel();
     }
     
     /**
@@ -244,7 +244,7 @@ public class Log4jMonitor {
      * @return a List of all logged statements of a specific severity level
      */
     public List<String> getDebugStatements() {
-    	return getStatements(Level.DEBUG);
+        return getStatements(Level.DEBUG);
     }
     
     /**
@@ -253,7 +253,7 @@ public class Log4jMonitor {
      * @return a List of all logged statements of a specific severity level
      */
     public List<String> getInfoStatements() {
-    	return getStatements(Level.INFO);
+        return getStatements(Level.INFO);
     }
     
     /**
@@ -262,7 +262,7 @@ public class Log4jMonitor {
      * @return a List of all logged statements of a specific severity level
      */
     public List<String> getWarnStatements() {
-    	return getStatements(Level.WARN);
+        return getStatements(Level.WARN);
     }
     
     /**
@@ -271,7 +271,7 @@ public class Log4jMonitor {
      * @return a List of all logged statements of a specific severity level
      */
     public List<String> getErrorStatements() {
-    	return getStatements(Level.ERROR);
+        return getStatements(Level.ERROR);
     }
     
     /**
@@ -280,7 +280,7 @@ public class Log4jMonitor {
      * @return a List of all logged statements of a specific severity level
      */
     public List<String> getFatalStatements() {
-    	return getStatements(Level.FATAL);
+        return getStatements(Level.FATAL);
     }
     
     /**

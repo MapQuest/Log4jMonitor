@@ -59,7 +59,7 @@ public class Log4jStatement {
     }
     
     public Boolean matches(final Pattern pattern) {
-    	return pattern.matcher(statement).matches();
+        return pattern.matcher(statement).matches();
     }
 
     @Override

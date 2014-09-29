@@ -13,27 +13,27 @@ import spock.lang.Specification
 
 class Log4jStatementSpec extends Specification {
     def "getLevel should return level used in constructor"() {
-		when:
+        when:
         def log4jStatement = new Log4jStatement(level, "log statement")
 
-		then:
+        then:
         log4jStatement.level == level
 
-		where:
-		level | _
-		Level.DEBUG | _
-		Level.INFO  | _
-		Level.WARN  | _
-		Level.ERROR | _
-		Level.FATAL | _
-		
+        where:
+        level | _
+        Level.DEBUG | _
+        Level.INFO  | _
+        Level.WARN  | _
+        Level.ERROR | _
+        Level.FATAL | _
+        
     }
 
     def "getStatement should return statement used in constructor"() {
-		given:
+        given:
         def log4jStatement = new Log4jStatement(Level.ERROR, "log statement")
 
-		expect:
+        expect:
         log4jStatement.statement == "log statement"
 
     }
@@ -42,9 +42,9 @@ class Log4jStatementSpec extends Specification {
         when:
         Log4jStatement.getInstance(null, "log statement")
 
-		then:
-		IllegalArgumentException e = thrown()
-		e.message == "level parameter cannot be null"
+        then:
+        IllegalArgumentException e = thrown()
+        e.message == "level parameter cannot be null"
 
     }
 
@@ -52,9 +52,9 @@ class Log4jStatementSpec extends Specification {
         when:
         Log4jStatement.getInstance(Level.ERROR, null)
 
-		then:
-		IllegalArgumentException e = thrown()
-		e.message == "statement parameter cannot be null"
+        then:
+        IllegalArgumentException e = thrown()
+        e.message == "statement parameter cannot be null"
 
     }
 
@@ -156,7 +156,7 @@ class Log4jStatementSpec extends Specification {
         expect:
         log4jStatement.isFatal()
         
-		and:
+        and:
         !log4jStatement.isDebug()
         !log4jStatement.isInfo()
         !log4jStatement.isWarn()
@@ -275,7 +275,7 @@ class Log4jStatementSpec extends Specification {
         and:
         def log4jStatement = new Log4jStatement(level, statement)
 
-		expect:
+        expect:
         log4jStatement.toString() == 
                 "com.stupidplebs.log4jmonitor.Log4jStatement[" + 
                         "level=ERROR,statement=log statement]"

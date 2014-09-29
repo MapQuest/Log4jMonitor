@@ -11,197 +11,197 @@ import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
 import spock.lang.Specification
 
 class Log4jMonitorSpec extends Specification {
-	def "null level constructorparameter should throw an IllegalArgumentException"() {
-		when:
-		new Log4jMonitor(null)
+    def "null level constructorparameter should throw an IllegalArgumentException"() {
+        when:
+        new Log4jMonitor(null)
 
-		then:
-		IllegalArgumentException e = thrown()
-		e.message == "level parameter cannot be null"
+        then:
+        IllegalArgumentException e = thrown()
+        e.message == "level parameter cannot be null"
 
-	}
+    }
 
-	def "zero parameter constructor should log statements at all levels"() {
-		given:
-		def log4jMonitor = new Log4jMonitor()
+    def "zero parameter constructor should log statements at all levels"() {
+        given:
+        def log4jMonitor = new Log4jMonitor()
 
-		and:
-		def logger = Logger.getLogger(Log4jMonitor.class)
+        and:
+        def logger = Logger.getLogger(Log4jMonitor.class)
 
-		when: "DEBUG, INFO, WARN, ERROR, and FATAL statements are logged"
-		logger.debug("debug statement")
-		logger.info("info statement")
-		logger.warn("warn statement")
-		logger.error("error statement")
-		logger.fatal("fatal statement")
+        when: "DEBUG, INFO, WARN, ERROR, and FATAL statements are logged"
+        logger.debug("debug statement")
+        logger.info("info statement")
+        logger.warn("warn statement")
+        logger.error("error statement")
+        logger.fatal("fatal statement")
 
-		then:
-		log4jMonitor.statementCount == 5
+        then:
+        log4jMonitor.statementCount == 5
 
-		and:
-		log4jMonitor.statements == [
-			Log4jStatement.getInstance(Level.DEBUG, "debug statement"),
-			Log4jStatement.getInstance(Level.INFO, "info statement"),
-			Log4jStatement.getInstance(Level.WARN, "warn statement"),
-			Log4jStatement.getInstance(Level.ERROR, "error statement"),
-			Log4jStatement.getInstance(Level.FATAL, "fatal statement")
-		]
-		
-	}
+        and:
+        log4jMonitor.statements == [
+            Log4jStatement.getInstance(Level.DEBUG, "debug statement"),
+            Log4jStatement.getInstance(Level.INFO, "info statement"),
+            Log4jStatement.getInstance(Level.WARN, "warn statement"),
+            Log4jStatement.getInstance(Level.ERROR, "error statement"),
+            Log4jStatement.getInstance(Level.FATAL, "fatal statement")
+        ]
+        
+    }
 
-	def "getLevel should return the level supplied to constructor"() {
-		given:
-		def log4jMonitor = new Log4jMonitor(inputLevel)
+    def "getLevel should return the level supplied to constructor"() {
+        given:
+        def log4jMonitor = new Log4jMonitor(inputLevel)
 
-		when: 
-		def actualLevel = log4jMonitor.level
+        when: 
+        def actualLevel = log4jMonitor.level
 
-		then:
-		actualLevel == inputLevel
+        then:
+        actualLevel == inputLevel
 
-		where:
-		inputLevel << [Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL]
-		
-	}
+        where:
+        inputLevel << [Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL]
+        
+    }
 
-	def "zero-parameter constructor should return DEBUG for getLevel"() {
-		given:
-		def log4jMonitor = new Log4jMonitor()
+    def "zero-parameter constructor should return DEBUG for getLevel"() {
+        given:
+        def log4jMonitor = new Log4jMonitor()
 
-		expect:
-		log4jMonitor.level == Level.DEBUG
+        expect:
+        log4jMonitor.level == Level.DEBUG
 
-	}
-		
-	def "getDebugInstance should log statements at all levels"() {
-		given:
-		def log4jMonitor = Log4jMonitor.debugInstance
+    }
+        
+    def "getDebugInstance should log statements at all levels"() {
+        given:
+        def log4jMonitor = Log4jMonitor.debugInstance
 
-		and:
-		def logger = Logger.getLogger(Log4jMonitor.class)
+        and:
+        def logger = Logger.getLogger(Log4jMonitor.class)
 
-		when: "DEBUG, INFO, WARN, ERROR, and FATAL statements are logged"
-		logger.debug("debug statement")
-		logger.info("info statement")
-		logger.warn("warn statement")
-		logger.error("error statement")
-		logger.fatal("fatal statement")
+        when: "DEBUG, INFO, WARN, ERROR, and FATAL statements are logged"
+        logger.debug("debug statement")
+        logger.info("info statement")
+        logger.warn("warn statement")
+        logger.error("error statement")
+        logger.fatal("fatal statement")
 
-		then:
-		log4jMonitor.statementCount == 5
+        then:
+        log4jMonitor.statementCount == 5
 
-		and:
-		log4jMonitor.statements == [
-			Log4jStatement.getInstance(Level.DEBUG, "debug statement"),
-			Log4jStatement.getInstance(Level.INFO, "info statement"),
-			Log4jStatement.getInstance(Level.WARN, "warn statement"),
-			Log4jStatement.getInstance(Level.ERROR, "error statement"),
-			Log4jStatement.getInstance(Level.FATAL, "fatal statement")
-		]
+        and:
+        log4jMonitor.statements == [
+            Log4jStatement.getInstance(Level.DEBUG, "debug statement"),
+            Log4jStatement.getInstance(Level.INFO, "info statement"),
+            Log4jStatement.getInstance(Level.WARN, "warn statement"),
+            Log4jStatement.getInstance(Level.ERROR, "error statement"),
+            Log4jStatement.getInstance(Level.FATAL, "fatal statement")
+        ]
 
-	}
+    }
 
-	def "getInfoInstance should log statements at INFO, WARN, ERROR, and FATAL levels"() {
-		given:
-		def log4jMonitor = Log4jMonitor.infoInstance
+    def "getInfoInstance should log statements at INFO, WARN, ERROR, and FATAL levels"() {
+        given:
+        def log4jMonitor = Log4jMonitor.infoInstance
 
-		and:
-		def logger = Logger.getLogger(Log4jMonitor.class)
+        and:
+        def logger = Logger.getLogger(Log4jMonitor.class)
 
-		when: "DEBUG, INFO, WARN, ERROR, and FATAL statements are logged"
-		logger.debug("debug statement")
-		logger.info("info statement")
-		logger.warn("warn statement")
-		logger.error("error statement")
-		logger.fatal("fatal statement")
+        when: "DEBUG, INFO, WARN, ERROR, and FATAL statements are logged"
+        logger.debug("debug statement")
+        logger.info("info statement")
+        logger.warn("warn statement")
+        logger.error("error statement")
+        logger.fatal("fatal statement")
 
-		then:
-		log4jMonitor.statementCount == 4
+        then:
+        log4jMonitor.statementCount == 4
 
-		and:
-		log4jMonitor.statements == [
-			Log4jStatement.getInstance(Level.INFO, "info statement"),
-			Log4jStatement.getInstance(Level.WARN, "warn statement"),
-			Log4jStatement.getInstance(Level.ERROR, "error statement"),
-			Log4jStatement.getInstance(Level.FATAL, "fatal statement")
-		]
+        and:
+        log4jMonitor.statements == [
+            Log4jStatement.getInstance(Level.INFO, "info statement"),
+            Log4jStatement.getInstance(Level.WARN, "warn statement"),
+            Log4jStatement.getInstance(Level.ERROR, "error statement"),
+            Log4jStatement.getInstance(Level.FATAL, "fatal statement")
+        ]
 
-	}
+    }
 
-	def "getWarnInstance should only log statements at WARN, ERROR, and FATAL levels"() {
-		given:
-		def log4jMonitor = Log4jMonitor.warnInstance
+    def "getWarnInstance should only log statements at WARN, ERROR, and FATAL levels"() {
+        given:
+        def log4jMonitor = Log4jMonitor.warnInstance
 
-		and:
-		def logger = Logger.getLogger(Log4jMonitor.class)
+        and:
+        def logger = Logger.getLogger(Log4jMonitor.class)
 
-		when: "DEBUG, INFO, WARN, ERROR, and FATAL statements are logged"
-		logger.debug("debug statement")
-		logger.info("info statement")
-		logger.warn("warn statement")
-		logger.error("error statement")
-		logger.fatal("fatal statement")
+        when: "DEBUG, INFO, WARN, ERROR, and FATAL statements are logged"
+        logger.debug("debug statement")
+        logger.info("info statement")
+        logger.warn("warn statement")
+        logger.error("error statement")
+        logger.fatal("fatal statement")
 
-		then:
-		log4jMonitor.statementCount == 3
+        then:
+        log4jMonitor.statementCount == 3
 
-		and:
-		log4jMonitor.statements == [
-			Log4jStatement.getInstance(Level.WARN, "warn statement"),
-			Log4jStatement.getInstance(Level.ERROR, "error statement"),
-			Log4jStatement.getInstance(Level.FATAL, "fatal statement")
-		]
+        and:
+        log4jMonitor.statements == [
+            Log4jStatement.getInstance(Level.WARN, "warn statement"),
+            Log4jStatement.getInstance(Level.ERROR, "error statement"),
+            Log4jStatement.getInstance(Level.FATAL, "fatal statement")
+        ]
 
-	}
+    }
 
-	def "getErrorInstance should only log statements at ERROR and FATAL levels"() {
-		given:
-		def log4jMonitor = Log4jMonitor.errorInstance
+    def "getErrorInstance should only log statements at ERROR and FATAL levels"() {
+        given:
+        def log4jMonitor = Log4jMonitor.errorInstance
 
-		and:
-		def logger = Logger.getLogger(Log4jMonitor.class)
+        and:
+        def logger = Logger.getLogger(Log4jMonitor.class)
 
-		when: "DEBUG, INFO, WARN, ERROR, and FATAL statements are logged"
-		logger.debug("debug statement")
-		logger.info("info statement")
-		logger.warn("warn statement")
-		logger.error("error statement")
-		logger.fatal("fatal statement")
+        when: "DEBUG, INFO, WARN, ERROR, and FATAL statements are logged"
+        logger.debug("debug statement")
+        logger.info("info statement")
+        logger.warn("warn statement")
+        logger.error("error statement")
+        logger.fatal("fatal statement")
 
-		then:
-		log4jMonitor.statementCount == 2
+        then:
+        log4jMonitor.statementCount == 2
 
-		and:
-		log4jMonitor.statements == [
-			Log4jStatement.getInstance(Level.ERROR, "error statement"),
-			Log4jStatement.getInstance(Level.FATAL, "fatal statement")
-		]
+        and:
+        log4jMonitor.statements == [
+            Log4jStatement.getInstance(Level.ERROR, "error statement"),
+            Log4jStatement.getInstance(Level.FATAL, "fatal statement")
+        ]
 
-	}
+    }
 
-	def "getFatalInstance should only log statements at FATAL levels"() {
-		given:
-		def log4jMonitor = Log4jMonitor.fatalInstance
+    def "getFatalInstance should only log statements at FATAL levels"() {
+        given:
+        def log4jMonitor = Log4jMonitor.fatalInstance
 
-		and:
-		def logger = Logger.getLogger(Log4jMonitor.class)
+        and:
+        def logger = Logger.getLogger(Log4jMonitor.class)
 
-		when: "DEBUG, INFO, WARN, ERROR, and FATAL statements are logged"
-		logger.debug("debug statement")
-		logger.info("info statement")
-		logger.warn("warn statement")
-		logger.error("error statement")
-		logger.fatal("fatal statement")
+        when: "DEBUG, INFO, WARN, ERROR, and FATAL statements are logged"
+        logger.debug("debug statement")
+        logger.info("info statement")
+        logger.warn("warn statement")
+        logger.error("error statement")
+        logger.fatal("fatal statement")
 
-		then:
-		log4jMonitor.statementCount == 1
+        then:
+        log4jMonitor.statementCount == 1
 
-		and:
-		log4jMonitor.statements == [
-			Log4jStatement.getInstance(Level.FATAL, "fatal statement")
-		]
+        and:
+        log4jMonitor.statements == [
+            Log4jStatement.getInstance(Level.FATAL, "fatal statement")
+        ]
 
-	}
+    }
 
     def "getStatements should delimit on newLine concatenated with levels"() {
         given:
@@ -236,14 +236,14 @@ class Log4jMonitorSpec extends Specification {
         then:
         log4jMonitor.statementCount == 5
 
-		and:
-		log4jMonitor.statements == [
-			Log4jStatement.getInstance(Level.DEBUG, debugStatement),
-			Log4jStatement.getInstance(Level.INFO, infoStatement),
-			Log4jStatement.getInstance(Level.WARN, warnStatement),
-			Log4jStatement.getInstance(Level.ERROR, errorStatement),
-			Log4jStatement.getInstance(Level.FATAL, fatalStatement)
-		]
+        and:
+        log4jMonitor.statements == [
+            Log4jStatement.getInstance(Level.DEBUG, debugStatement),
+            Log4jStatement.getInstance(Level.INFO, infoStatement),
+            Log4jStatement.getInstance(Level.WARN, warnStatement),
+            Log4jStatement.getInstance(Level.ERROR, errorStatement),
+            Log4jStatement.getInstance(Level.FATAL, fatalStatement)
+        ]
 
     }
 
@@ -272,20 +272,20 @@ class Log4jMonitorSpec extends Specification {
         then:
         def statements = new String(byteArrayOutputStream.toByteArray())
                 .split(Log4jMonitor.LINE_SEPARATOR)
-	
-		statements == [
-			"com.stupidplebs.log4jmonitor.Log4jStatement" + 
-				"[level=DEBUG,statement=debug statement]",
-			"com.stupidplebs.log4jmonitor.Log4jStatement" +
-				"[level=INFO,statement=info statement]",
-			"com.stupidplebs.log4jmonitor.Log4jStatement" +
-				"[level=WARN,statement=warn statement]",
-			"com.stupidplebs.log4jmonitor.Log4jStatement" +
-				"[level=ERROR,statement=error statement]",
-			"com.stupidplebs.log4jmonitor.Log4jStatement" +
-				"[level=FATAL,statement=fatal statement]",
-		]
-				
+    
+        statements == [
+            "com.stupidplebs.log4jmonitor.Log4jStatement" + 
+                "[level=DEBUG,statement=debug statement]",
+            "com.stupidplebs.log4jmonitor.Log4jStatement" +
+                "[level=INFO,statement=info statement]",
+            "com.stupidplebs.log4jmonitor.Log4jStatement" +
+                "[level=WARN,statement=warn statement]",
+            "com.stupidplebs.log4jmonitor.Log4jStatement" +
+                "[level=ERROR,statement=error statement]",
+            "com.stupidplebs.log4jmonitor.Log4jStatement" +
+                "[level=FATAL,statement=fatal statement]",
+        ]
+                
     }
 
     def "dumpToStdError should write only messages of supplied level to StdError"() {
@@ -314,7 +314,7 @@ class Log4jMonitorSpec extends Specification {
         def statements = new String(byteArrayOutputStream.toByteArray())
                 .split(Log4jMonitor.LINE_SEPARATOR)
         statements == ["com.stupidplebs.log4jmonitor.Log4jStatement" + 
-			"[level=WARN,statement=warn statement]"]
+            "[level=WARN,statement=warn statement]"]
 
     }
 
@@ -341,18 +341,18 @@ class Log4jMonitorSpec extends Specification {
         then:
         def statements = new String(byteArrayOutputStream.toByteArray()).split(Log4jMonitor.LINE_SEPARATOR)
         
-		statements == [
-			"com.stupidplebs.log4jmonitor.Log4jStatement" + 
-				"[level=DEBUG,statement=debug statement]",
-			"com.stupidplebs.log4jmonitor.Log4jStatement" +
-				"[level=INFO,statement=info statement]",
-			"com.stupidplebs.log4jmonitor.Log4jStatement" +
-				"[level=WARN,statement=warn statement]",
-			"com.stupidplebs.log4jmonitor.Log4jStatement" +
-				"[level=ERROR,statement=error statement]",
-			"com.stupidplebs.log4jmonitor.Log4jStatement" +
-				"[level=FATAL,statement=fatal statement]",
-		]
+        statements == [
+            "com.stupidplebs.log4jmonitor.Log4jStatement" + 
+                "[level=DEBUG,statement=debug statement]",
+            "com.stupidplebs.log4jmonitor.Log4jStatement" +
+                "[level=INFO,statement=info statement]",
+            "com.stupidplebs.log4jmonitor.Log4jStatement" +
+                "[level=WARN,statement=warn statement]",
+            "com.stupidplebs.log4jmonitor.Log4jStatement" +
+                "[level=ERROR,statement=error statement]",
+            "com.stupidplebs.log4jmonitor.Log4jStatement" +
+                "[level=FATAL,statement=fatal statement]",
+        ]
 
     }
 
@@ -379,7 +379,7 @@ class Log4jMonitorSpec extends Specification {
         log4jMonitor.dumpToOutputStream(brokenOutputStream)
 
         then:
-		thrown(IOException)
+        thrown(IOException)
         
     }
     
@@ -612,9 +612,9 @@ class Log4jMonitorSpec extends Specification {
 
         when:
         statements.clear()
-		
-		then:
-		thrown(UnsupportedOperationException)
+        
+        then:
+        thrown(UnsupportedOperationException)
 
     }
 
@@ -641,9 +641,9 @@ class Log4jMonitorSpec extends Specification {
 
         when:
         statements.clear()
-		
-		then:
-		thrown(UnsupportedOperationException)
+        
+        then:
+        thrown(UnsupportedOperationException)
 
     }
 
@@ -675,9 +675,9 @@ class Log4jMonitorSpec extends Specification {
 
         when:
         statements.clear()
-		
-		then:
-		thrown(UnsupportedOperationException)
+        
+        then:
+        thrown(UnsupportedOperationException)
 
     }
 
@@ -709,9 +709,9 @@ class Log4jMonitorSpec extends Specification {
 
         when:
         statements.clear()
-		
-		then:
-		thrown(UnsupportedOperationException)
+        
+        then:
+        thrown(UnsupportedOperationException)
 
     }
 
@@ -738,9 +738,9 @@ class Log4jMonitorSpec extends Specification {
 
         when:
         statements.clear()
-		
-		then:
-		thrown(UnsupportedOperationException)
+        
+        then:
+        thrown(UnsupportedOperationException)
 
     }
 
@@ -755,7 +755,7 @@ class Log4jMonitorSpec extends Specification {
         log4jMonitor.getStatements(Level.WARN, rawPattern)
 
         then:
-		thrown(PatternSyntaxException)
+        thrown(PatternSyntaxException)
 
     }
 
@@ -788,9 +788,9 @@ class Log4jMonitorSpec extends Specification {
         when:
         statements.clear()
 
-		then:
-		thrown(UnsupportedOperationException)
-		
+        then:
+        thrown(UnsupportedOperationException)
+        
     }
 
     def "isDebugStatement should return true if pattern matches at least one FATAL-level statement"() {
@@ -812,7 +812,7 @@ class Log4jMonitorSpec extends Specification {
         and: "a regex that only matches statements suffixed with 1 or 3"
         def pattern = Pattern.compile("[a-z]+ statement [13]")
 
-		expect:
+        expect:
         log4jMonitor.isDebugStatement(pattern)
         
     }
@@ -836,7 +836,7 @@ class Log4jMonitorSpec extends Specification {
         and: "a regex that only matches statements suffixed with 1 or 3"
         def pattern = Pattern.compile("[a-z]+ statement [13]")
 
-		expect:
+        expect:
         log4jMonitor.isInfoStatement(pattern)
         
     }
@@ -860,7 +860,7 @@ class Log4jMonitorSpec extends Specification {
         and: "a regex that only matches statements suffixed with 1 or 3"
         def pattern = Pattern.compile("[a-z]+ statement [13]")
 
-		expect:
+        expect:
         log4jMonitor.isWarnStatement(pattern)
         
     }
@@ -884,7 +884,7 @@ class Log4jMonitorSpec extends Specification {
         and: "a regex that only matches statements suffixed with 1 or 3"
         def pattern = Pattern.compile("[a-z]+ statement [13]")
 
-		expect:
+        expect:
         log4jMonitor.isErrorStatement(pattern)
         
     }
@@ -908,7 +908,7 @@ class Log4jMonitorSpec extends Specification {
         and: "a regex that only matches statements suffixed with 1 or 3"
         def pattern = Pattern.compile("[a-z]+ statement [13]")
 
-		expect:
+        expect:
         log4jMonitor.isFatalStatement(pattern)
         
     }
@@ -930,7 +930,7 @@ class Log4jMonitorSpec extends Specification {
         and: "a regex that doesn't match anything"
         def pattern = Pattern.compile("pattern that doesn't match anything")
 
-		expect:
+        expect:
         !log4jMonitor.isDebugStatement(pattern)
         
     }
@@ -952,7 +952,7 @@ class Log4jMonitorSpec extends Specification {
         and: "a regex that doesn't match anything"
         def pattern = Pattern.compile("pattern that doesn't match anything")
 
-		expect:
+        expect:
         !log4jMonitor.isInfoStatement(pattern)
         
     }
@@ -974,7 +974,7 @@ class Log4jMonitorSpec extends Specification {
         and: "a regex that doesn't match anything"
         def pattern = Pattern.compile("pattern that doesn't match anything")
 
-		expect:
+        expect:
         !log4jMonitor.isWarnStatement(pattern)
         
     }
@@ -996,7 +996,7 @@ class Log4jMonitorSpec extends Specification {
         and: "a regex that doesn't match anything"
         def pattern = Pattern.compile("pattern that doesn't match anything")
 
-		expect:
+        expect:
         !log4jMonitor.isErrorStatement(pattern)
         
     }
@@ -1018,7 +1018,7 @@ class Log4jMonitorSpec extends Specification {
         and: "a regex that doesn't match anything"
         def pattern = Pattern.compile("pattern that doesn't match anything")
 
-		expect:
+        expect:
         !log4jMonitor.isFatalStatement(pattern)
         
     }
@@ -1037,13 +1037,13 @@ class Log4jMonitorSpec extends Specification {
         logger.error("error statement")
         logger.fatal("fatal statement")
 
-		expect:
-		log4jMonitor.isStatement(Pattern.compile("d.bug statement"))
-		log4jMonitor.isStatement(Pattern.compile("i.fo statement"))
-		log4jMonitor.isStatement(Pattern.compile("w.rn statement"))
-		log4jMonitor.isStatement(Pattern.compile("e.ror statement"))
-		log4jMonitor.isStatement(Pattern.compile("f.tal statement"))
-		!log4jMonitor.isStatement(Pattern.compile("doesn't match any statements"))
+        expect:
+        log4jMonitor.isStatement(Pattern.compile("d.bug statement"))
+        log4jMonitor.isStatement(Pattern.compile("i.fo statement"))
+        log4jMonitor.isStatement(Pattern.compile("w.rn statement"))
+        log4jMonitor.isStatement(Pattern.compile("e.ror statement"))
+        log4jMonitor.isStatement(Pattern.compile("f.tal statement"))
+        !log4jMonitor.isStatement(Pattern.compile("doesn't match any statements"))
 
     }
     
@@ -1061,7 +1061,7 @@ class Log4jMonitorSpec extends Specification {
         logger.error("error statement")
         logger.fatal("debug statement")
 
-		expect:
+        expect:
         log4jMonitor.isStatement("debug statement")
         log4jMonitor.isStatement("info statement")
         log4jMonitor.isStatement("warn statement")
@@ -1071,161 +1071,161 @@ class Log4jMonitorSpec extends Specification {
         
     }
     
-	def "getDebugStatements should only return DEBUG-level statements"() {
-		given:
-		def log4jMonitor = new Log4jMonitor()
+    def "getDebugStatements should only return DEBUG-level statements"() {
+        given:
+        def log4jMonitor = new Log4jMonitor()
 
-		and:
-		def logger = Logger.getLogger(Log4jMonitor.class)
+        and:
+        def logger = Logger.getLogger(Log4jMonitor.class)
 
-		and:
-		logger.debug("debug statement 1")
-		logger.info("info statement 1")
-		logger.warn("warn statement 1")
-		logger.error("error statement 1")
-		logger.fatal("fatal statement 1")
-		logger.debug("debug statement 2")
-		logger.info("info statement 2")
-		logger.warn("warn statement 2")
-		logger.error("error statement 2")
-		logger.fatal("fatal statement 2")
+        and:
+        logger.debug("debug statement 1")
+        logger.info("info statement 1")
+        logger.warn("warn statement 1")
+        logger.error("error statement 1")
+        logger.fatal("fatal statement 1")
+        logger.debug("debug statement 2")
+        logger.info("info statement 2")
+        logger.warn("warn statement 2")
+        logger.error("error statement 2")
+        logger.fatal("fatal statement 2")
 
-		expect:
-		log4jMonitor.debugStatements == ["debug statement 1", "debug statement 2"]
-		
-	}
-	
-	def "getInfoStatements should only return INFO-level statements"() {
-		given:
-		def log4jMonitor = new Log4jMonitor()
+        expect:
+        log4jMonitor.debugStatements == ["debug statement 1", "debug statement 2"]
+        
+    }
+    
+    def "getInfoStatements should only return INFO-level statements"() {
+        given:
+        def log4jMonitor = new Log4jMonitor()
 
-		and:
-		def logger = Logger.getLogger(Log4jMonitor.class)
+        and:
+        def logger = Logger.getLogger(Log4jMonitor.class)
 
-		and:
-		logger.debug("debug statement 1")
-		logger.info("info statement 1")
-		logger.warn("warn statement 1")
-		logger.error("error statement 1")
-		logger.fatal("fatal statement 1")
-		logger.debug("debug statement 2")
-		logger.info("info statement 2")
-		logger.warn("warn statement 2")
-		logger.error("error statement 2")
-		logger.fatal("fatal statement 2")
+        and:
+        logger.debug("debug statement 1")
+        logger.info("info statement 1")
+        logger.warn("warn statement 1")
+        logger.error("error statement 1")
+        logger.fatal("fatal statement 1")
+        logger.debug("debug statement 2")
+        logger.info("info statement 2")
+        logger.warn("warn statement 2")
+        logger.error("error statement 2")
+        logger.fatal("fatal statement 2")
 
-		expect:
-		log4jMonitor.infoStatements == ["info statement 1", "info statement 2"]
-		
-	}
-	
-	def "getWarnStatements should only return WARN-level statements"() {
-		given:
-		def log4jMonitor = new Log4jMonitor()
+        expect:
+        log4jMonitor.infoStatements == ["info statement 1", "info statement 2"]
+        
+    }
+    
+    def "getWarnStatements should only return WARN-level statements"() {
+        given:
+        def log4jMonitor = new Log4jMonitor()
 
-		and:
-		def logger = Logger.getLogger(Log4jMonitor.class)
+        and:
+        def logger = Logger.getLogger(Log4jMonitor.class)
 
-		and:
-		logger.debug("debug statement 1")
-		logger.info("info statement 1")
-		logger.warn("warn statement 1")
-		logger.error("error statement 1")
-		logger.fatal("fatal statement 1")
-		logger.debug("debug statement 2")
-		logger.info("info statement 2")
-		logger.warn("warn statement 2")
-		logger.error("error statement 2")
-		logger.fatal("fatal statement 2")
+        and:
+        logger.debug("debug statement 1")
+        logger.info("info statement 1")
+        logger.warn("warn statement 1")
+        logger.error("error statement 1")
+        logger.fatal("fatal statement 1")
+        logger.debug("debug statement 2")
+        logger.info("info statement 2")
+        logger.warn("warn statement 2")
+        logger.error("error statement 2")
+        logger.fatal("fatal statement 2")
 
-		expect:
-		log4jMonitor.warnStatements == ["warn statement 1", "warn statement 2"]
-		
-	}
-	
-	def "getErrorStatements should only return ERROR-level statements"() {
-		given:
-		def log4jMonitor = new Log4jMonitor()
+        expect:
+        log4jMonitor.warnStatements == ["warn statement 1", "warn statement 2"]
+        
+    }
+    
+    def "getErrorStatements should only return ERROR-level statements"() {
+        given:
+        def log4jMonitor = new Log4jMonitor()
 
-		and:
-		def logger = Logger.getLogger(Log4jMonitor.class)
+        and:
+        def logger = Logger.getLogger(Log4jMonitor.class)
 
-		and:
-		logger.debug("debug statement 1")
-		logger.info("info statement 1")
-		logger.warn("warn statement 1")
-		logger.error("error statement 1")
-		logger.fatal("fatal statement 1")
-		logger.debug("debug statement 2")
-		logger.info("info statement 2")
-		logger.warn("warn statement 2")
-		logger.error("error statement 2")
-		logger.fatal("fatal statement 2")
+        and:
+        logger.debug("debug statement 1")
+        logger.info("info statement 1")
+        logger.warn("warn statement 1")
+        logger.error("error statement 1")
+        logger.fatal("fatal statement 1")
+        logger.debug("debug statement 2")
+        logger.info("info statement 2")
+        logger.warn("warn statement 2")
+        logger.error("error statement 2")
+        logger.fatal("fatal statement 2")
 
-		expect:
-		log4jMonitor.errorStatements == ["error statement 1", "error statement 2"]
-		
-	}
-	
-	def "getFatalStatements should only return FATAL-level statements"() {
-		given:
-		def log4jMonitor = new Log4jMonitor()
+        expect:
+        log4jMonitor.errorStatements == ["error statement 1", "error statement 2"]
+        
+    }
+    
+    def "getFatalStatements should only return FATAL-level statements"() {
+        given:
+        def log4jMonitor = new Log4jMonitor()
 
-		and:
-		def logger = Logger.getLogger(Log4jMonitor.class)
+        and:
+        def logger = Logger.getLogger(Log4jMonitor.class)
 
-		and:
-		logger.debug("debug statement 1")
-		logger.info("info statement 1")
-		logger.warn("warn statement 1")
-		logger.error("error statement 1")
-		logger.fatal("fatal statement 1")
-		logger.debug("debug statement 2")
-		logger.info("info statement 2")
-		logger.warn("warn statement 2")
-		logger.error("error statement 2")
-		logger.fatal("fatal statement 2")
+        and:
+        logger.debug("debug statement 1")
+        logger.info("info statement 1")
+        logger.warn("warn statement 1")
+        logger.error("error statement 1")
+        logger.fatal("fatal statement 1")
+        logger.debug("debug statement 2")
+        logger.info("info statement 2")
+        logger.warn("warn statement 2")
+        logger.error("error statement 2")
+        logger.fatal("fatal statement 2")
 
-		expect:
-		log4jMonitor.fatalStatements == ["fatal statement 1", "fatal statement 2"]
-		
-	}
-	
-	def "hasStatements should return false if there are no statements at the supplied level"() {
-		given:
-		def log4jMonitor = new Log4jMonitor()
+        expect:
+        log4jMonitor.fatalStatements == ["fatal statement 1", "fatal statement 2"]
+        
+    }
+    
+    def "hasStatements should return false if there are no statements at the supplied level"() {
+        given:
+        def log4jMonitor = new Log4jMonitor()
 
-		and:
-		def logger = Logger.getLogger(Log4jMonitor.class)
+        and:
+        def logger = Logger.getLogger(Log4jMonitor.class)
 
-		when:
-		def hasStatements = log4jMonitor.hasStatements(level)
-		
-		then:
-		!hasStatements
-		
-		where:
-		level << [Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL]
+        when:
+        def hasStatements = log4jMonitor.hasStatements(level)
+        
+        then:
+        !hasStatements
+        
+        where:
+        level << [Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL]
 
-	}
-	
-	def "hasStatements should return true if there is at least one statement at the supplied level"() {
-		given:
-		def log4jMonitor = new Log4jMonitor()
+    }
+    
+    def "hasStatements should return true if there is at least one statement at the supplied level"() {
+        given:
+        def log4jMonitor = new Log4jMonitor()
 
-		and:
-		def logger = Logger.getLogger(Log4jMonitor.class)
-		logger.log(level, "statement")
+        and:
+        def logger = Logger.getLogger(Log4jMonitor.class)
+        logger.log(level, "statement")
 
-		when:
-		def hasStatements = log4jMonitor.hasStatements(level)
-		
-		then:
-		hasStatements
-		
-		where:
-		level << [Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL]
+        when:
+        def hasStatements = log4jMonitor.hasStatements(level)
+        
+        then:
+        hasStatements
+        
+        where:
+        level << [Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL]
 
-	}
-	
+    }
+    
 }
