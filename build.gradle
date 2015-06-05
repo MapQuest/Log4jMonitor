@@ -1,15 +1,8 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'groovy'
-apply plugin: 'cobertura'
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "net.saliman:gradle-cobertura-plugin:2.2.2"
-    }
+plugins {
+	id 'net.saliman.cobertura' version '2.2.7'
+	id 'java'
+	id 'eclipse'
+	id 'groovy'
 }
 
 repositories {
@@ -17,10 +10,14 @@ repositories {
 }
 
 dependencies {
-    compile "log4j:log4j:1.2.17"
+    compile 'log4j:log4j:1.2.17'
     
-    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+	testCompile 'org.codehaus.groovy:groovy-all:2.2.0'
+	testCompile 'org.spockframework:spock-core:1.0-groovy-2.0'
 
+	testRuntime 'org.slf4j:slf4j-log4j12:1.7.5'
+	testRuntime 'log4j:log4j:1.2.7'
+	
 }
 
 cobertura {
